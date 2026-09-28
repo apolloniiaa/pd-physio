@@ -1,0 +1,16 @@
+@mixin container {
+  width: min(100% - 48px, 1200px);
+  margin-inline: auto;
+}
+
+@mixin respond-to($breakpoint) {
+  @media (min-width: $breakpoint) {
+    @content;
+  }
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,0 +1,39 @@
+@use '../styles/variables' as *;
+@use '../styles/breakpoints' as *;
+@use '../styles/mixins' as *;
+@use '../styles/typography' as *;
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  font-family: $font-sans;
+  font-size: $font-size-md;
+  font-weight: $font-weight-regular;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
