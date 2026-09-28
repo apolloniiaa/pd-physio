@@ -1,5 +1,23 @@
-$font-serif: 'Cormorant Garamond', serif;
-$font-sans: 'Manrope', sans-serif;
+// ========================================
+// Font families
+// ========================================
+// The fonts are loaded once with next/font in src/app/layout.tsx, which
+// exposes them as CSS variables. next/font serves them under generated
+// family names, so each token references its variable first and keeps the
+// plain family name + system stack as the fallback.
+
+// Body, UI and navigation text.
+$font-sans: var(--font-sans), 'IBM Plex Sans', ui-sans-serif, system-ui,
+  sans-serif;
+// Headings and display type.
+$font-display: var(--font-display), 'Space Grotesk', ui-sans-serif, system-ui,
+  sans-serif;
+// Only where monospace is meaningful (codes, tabular figures, etc.).
+$font-mono: var(--font-mono), 'IBM Plex Mono', ui-monospace, monospace;
+
+// ========================================
+// Sizes & weights
+// ========================================
 
 $font-size-xs: 12px;
 $font-size-sm: 14px;

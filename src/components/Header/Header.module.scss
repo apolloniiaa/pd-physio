@@ -1,0 +1,361 @@
+@use '../../styles/variables' as *;
+@use '../../styles/breakpoints' as *;
+@use '../../styles/mixins' as *;
+@use '../../styles/typography' as *;
+
+// ========================================
+// Header — local tokens
+// ========================================
+
+$logo-mark-height: 36px;
+
+$toggle-size: 44px;
+$toggle-line-width: 24px;
+$toggle-line-weight: 1.5px;
+
+$link-rest-opacity: 0.78;
+
+// Desktop edge padding for the logo (left) and booking CTA (right).
+$header-edge-padding: clamp(#{$spacing-lg}, 2vw, #{$spacing-xl});
+
+// Desktop link rhythm: one consistent gap, 48px at 1440px,
+// tightening with the viewport to ~34px at 1024px.
+$nav-gap: clamp(28px, 3.33vw, 48px);
+$nav-hover-lift: -1px;
+
+// ========================================
+// Header bar
+// ========================================
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: $z-header;
+  width: 100%;
+  background-color: $color-header-bg;
+  color: $color-header-text;
+  font-family: $font-sans;
+}
+
+.inner {
+  position: relative;
+  z-index: 2;
+  // Mobile/tablet: logo | hamburger.
+  // Desktop: logo at the left edge, CTA at the right edge, and the links
+  // absolutely centred in the viewport (see .desktopNav), independent of both.
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: $spacing-xl;
+  height: $header-height;
+  padding-inline: $container-padding;
+  background-color: $color-header-bg;
+
+  @include respond-to($bp-md) {
+    padding-inline: $spacing-xl;
+  }
+
+  @include respond-to($bp-lg) {
+    display: flex;
+    justify-content: space-between;
+    // Equal edge padding on both sides: 24px at 1024px → 32px from 1600px.
+    padding-inline: $header-edge-padding;
+  }
+}
+
+// ========================================
+// Logo — floats directly on the bar
+// ========================================
+
+.logo {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: opacity $transition-base;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  &:focus-visible {
+    outline: 1px solid $color-header-text;
+    outline-offset: 6px;
+  }
+}
+
+.logoMark {
+  width: auto;
+  height: $logo-mark-height;
+  // The mark asset is a single-colour transparent PNG; render it in the
+  // header text colour.
+  filter: brightness(0) invert(1);
+}
+
+// ========================================
+// Shared link micro-interaction
+// ========================================
+
+@mixin underline-reveal {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 450ms $ease-editorial;
+  }
+}
+
+@mixin underline-reveal-active {
+  &::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+}
+
+// ========================================
+// Desktop navigation
+// ========================================
+
+.desktopNav {
+  display: none;
+
+  @include respond-to($bp-lg) {
+    display: block;
+    // True viewport centre: .inner spans the full width, so 50% of it
+    // is 50% of the viewport, regardless of logo or CTA width.
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.navList {
+  display: flex;
+  align-items: center;
+  gap: $nav-gap;
+  list-style: none;
+  white-space: nowrap;
+}
+
+.navLink {
+  @include underline-reveal;
+  display: inline-block;
+  font-size: $font-size-xs;
+  line-height: normal;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  opacity: $link-rest-opacity;
+  transition:
+    opacity $transition-base,
+    transform 350ms $ease-editorial;
+
+  // Emphasis on hover: brightness (opacity), a 1px lift and the
+  // underline. All are paint/transform-only, so no layout shifts.
+  &:hover,
+  &:focus-visible {
+    opacity: 1;
+    transform: translateY($nav-hover-lift);
+    @include underline-reveal-active;
+  }
+
+  &:focus-visible {
+    outline: 1px solid $color-header-text;
+    outline-offset: 8px;
+  }
+}
+
+// ========================================
+// Booking CTA — emphasised, not boxed
+// ========================================
+
+.cta {
+  display: none;
+  justify-self: end;
+  align-items: center;
+  gap: $spacing-md;
+  flex-shrink: 0;
+  height: $header-height;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  line-height: normal;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+
+  @include respond-to($bp-lg) {
+    display: inline-flex;
+  }
+
+  &:hover,
+  &:focus-visible {
+    .ctaLabel {
+      @include underline-reveal-active;
+    }
+
+    .arrow {
+      transform: translateX(5px);
+    }
+  }
+
+  &:focus-visible {
+    outline: 1px solid $color-header-text;
+    outline-offset: -12px;
+  }
+}
+
+.ctaLabel {
+  @include underline-reveal;
+}
+
+.arrow {
+  flex-shrink: 0;
+  transition: transform $transition-slow;
+}
+
+// ========================================
+// Hamburger (two lines → X, animated with Motion)
+// ========================================
+
+.toggle {
+  @include flex-center;
+  position: relative;
+  width: $toggle-size;
+  height: $toggle-size;
+  justify-self: end;
+  // Optically align the lines with the page gutter.
+  margin-right: calc(($toggle-size - $toggle-line-width) / -2);
+  padding: 0;
+  border: 0;
+  border-radius: $radius-xs;
+  background: none;
+  color: $color-header-text;
+  cursor: pointer;
+
+  @include respond-to($bp-lg) {
+    display: none;
+  }
+
+  &:focus-visible {
+    outline: 1px solid $color-header-text;
+    outline-offset: 2px;
+  }
+}
+
+.toggleLine {
+  position: absolute;
+  top: 50%;
+  left: calc(50% - #{$toggle-line-width * 0.5});
+  width: $toggle-line-width;
+  height: $toggle-line-weight;
+  margin-top: calc($toggle-line-weight / -2);
+  background-color: currentColor;
+}
+
+// ========================================
+// Mobile / tablet menu (mounted by AnimatePresence)
+// ========================================
+
+.backdrop {
+  position: fixed;
+  inset: $header-height 0 0;
+  z-index: 0;
+  background-color: rgba($color-header-bg, 0.55);
+
+  @include respond-to($bp-lg) {
+    display: none;
+  }
+}
+
+.mobileMenu {
+  position: fixed;
+  top: $header-height;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  max-height: calc(100dvh - #{$header-height});
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: $spacing-lg $container-padding $spacing-2xl;
+  background-color: $color-header-bg;
+  transform-origin: top center;
+
+  @include respond-to($bp-md) {
+    padding: $spacing-xl $spacing-xl $spacing-3xl;
+  }
+
+  @include respond-to($bp-lg) {
+    display: none;
+  }
+}
+
+.mobileList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  list-style: none;
+}
+
+.mobileLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding-block: 12px;
+  font-size: $font-size-lg;
+  letter-spacing: 0.08em;
+  opacity: 0.82;
+  transition: opacity $transition-base;
+
+  @include respond-to($bp-md) {
+    padding-block: 14px;
+    font-size: $font-size-xl;
+  }
+
+  &:hover,
+  &:focus-visible {
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: 1px solid $color-header-text;
+    outline-offset: 4px;
+  }
+}
+
+.mobileCtaItem {
+  margin-top: $spacing-lg;
+}
+
+.mobileCta {
+  font-weight: $font-weight-medium;
+  opacity: 1;
+
+  &:hover,
+  &:focus-visible {
+    .arrow {
+      transform: translateX(5px);
+    }
+  }
+}
+
+// ========================================
+// Reduced motion (CSS micro-interactions; Motion handles the menu)
+// ========================================
+
+@media (prefers-reduced-motion: reduce) {
+  .logo,
+  .navLink,
+  .navLink::after,
+  .ctaLabel::after,
+  .arrow,
+  .mobileLink {
+    transition: none;
+  }
+}
