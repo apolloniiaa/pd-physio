@@ -1,0 +1,254 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/breakpoints' as *;
+@use '../../../styles/mixins' as *;
+@use '../../../styles/typography' as *;
+
+// Hero copy colour (bone white) for legibility over the photo.
+$color-hero-text: #f5f1e8;
+
+// Figma: 1440 × 666 frame including the (now separate) 64px header.
+$hero-height-desktop: 602px;
+
+// Navbar + Hero fill the first viewport. svh avoids jumps from mobile
+// browser toolbars; the vh line is the fallback for older browsers.
+$hero-fill-fallback: calc(100vh - #{$header-height});
+$hero-fill: calc(100svh - #{$header-height});
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: $hero-fill-fallback;
+  min-height: $hero-fill;
+  padding-block: $spacing-3xl $spacing-4xl;
+  overflow: hidden;
+  background-color: #f1e8dc;
+
+  // Keep copy legible where the photo sits behind it on narrow screens.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      180deg,
+      rgba(246, 239, 229, 0.92) 0%,
+      rgba(246, 239, 229, 0.78) 55%,
+      rgba(246, 239, 229, 0.15) 100%
+    );
+  }
+
+  @include respond-to($bp-md) {
+    &::after {
+      background: linear-gradient(
+        90deg,
+        rgba(246, 239, 229, 0.9) 0%,
+        rgba(246, 239, 229, 0.6) 55%,
+        rgba(246, 239, 229, 0) 80%
+      );
+    }
+  }
+
+  @include respond-to($bp-lg) {
+    align-items: stretch;
+    // Never shorter than the Figma frame, otherwise the full first viewport.
+    min-height: max(#{$hero-height-desktop}, #{$hero-fill-fallback});
+    min-height: max(#{$hero-height-desktop}, #{$hero-fill});
+    padding-block: 0;
+
+    &::after {
+      display: none;
+    }
+  }
+}
+
+.background {
+  z-index: -2;
+  object-fit: cover;
+  // Mobile: keep the figure in frame; desktop: match Figma crop.
+  object-position: 72% 100%;
+
+  // Tablet: keep the figure to the right of the copy.
+  @include respond-to($bp-md) {
+    object-position: 45% 100%;
+  }
+
+  // Desktop < 1440: crop from the left so the figure stays clear of the title.
+  // At 1440 the image fits the width exactly, matching the Figma.
+  @include respond-to($bp-lg) {
+    object-position: left bottom;
+  }
+}
+
+.inner {
+  @include container;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  // Desktop: a wider frame pulls the copy ~70px left (x=60 at 1440), and the
+  // heavier bottom padding lifts the centred block ~60px above true centre.
+  @include respond-to($bp-lg) {
+    width: min(100% - 64px, 1320px);
+    align-items: center;
+    padding-block: $spacing-2xl 168px;
+  }
+}
+
+.content {
+  max-width: 649px;
+
+  @include respond-to($bp-md) {
+    max-width: min(649px, 60vw);
+  }
+
+  // Wide enough for the heading to stay on ~2 lines at every desktop size.
+  @include respond-to($bp-lg) {
+    max-width: min(920px, 64vw);
+  }
+}
+
+.eyebrow {
+  margin-bottom: $spacing-md;
+
+  color: $color-hero-text;
+  font-size: $font-size-sm;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+
+  @include respond-to($bp-md) {
+    font-size: $font-size-md;
+  }
+
+  @include respond-to($bp-lg) {
+    margin-bottom: 28px;
+    font-size: 15px;
+    letter-spacing: 0.12em;
+  }
+}
+
+.title {
+  color: $color-hero-text;
+  font-family: $font-display;
+  font-size: clamp(34px, 3vw + 1.2rem, 48px);
+  font-weight: $font-weight-regular;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+
+  // Desktop: 56px at 1440, up to 64px on wider screens.
+  // Two balanced lines: width capped in em (scales with the font size) and
+  // the browser evens out the line lengths instead of a hard break.
+  @include respond-to($bp-lg) {
+    max-width: 14.2em;
+    font-size: clamp(44px, 3.9vw, 64px);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+}
+
+.body {
+  max-width: 431px;
+  margin-top: $spacing-lg;
+  color: $color-hero-text;
+  font-size: $font-size-lg;
+  line-height: 1.5;
+
+  @include respond-to($bp-md) {
+    font-size: 20px;
+  }
+
+  @include respond-to($bp-lg) {
+    max-width: 580px;
+    margin-top: 32px;
+    font-size: 21px;
+    line-height: 1.6;
+  }
+}
+
+// Figma "Button – Időpontfoglalás": #283b03, 250 × 58, cream label + arrow.
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-xl;
+  min-width: 250px;
+  min-height: 58px;
+  margin-top: $spacing-2xl;
+
+  @include respond-to($bp-lg) {
+    min-width: 270px;
+    min-height: 62px;
+    margin-top: $spacing-2xl;
+  }
+
+  padding: 0 $spacing-lg 0 28px;
+  border-radius: $radius-xs;
+  background-color: $color-forest-button;
+  color: $color-cream;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background-color $transition-base;
+
+  &:hover {
+    background-color: $color-forest;
+  }
+
+  &:hover .ctaArrow,
+  &:focus-visible .ctaArrow {
+    transform: translateX(5px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-ink;
+    outline-offset: 3px;
+  }
+}
+
+.ctaArrow {
+  flex-shrink: 0;
+  transition: transform 450ms $ease-editorial;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ctaArrow {
+    transition: none;
+  }
+}
+
+// "MOVEMENT / RECOVERY / BALANCE" — decorative, desktop only.
+.tagline {
+  display: none;
+
+  // Vertically centred alongside the content, 63px inside the container's right edge.
+  @include respond-to($bp-lg) {
+    position: absolute;
+    top: 50%;
+    right: 110px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transform: translateY(-50%);
+    color: #f5eee5;
+    font-size: 17px;
+    letter-spacing: 0.12em;
+  }
+}
+
+.taglineRule {
+  width: 1px;
+  height: 29px;
+  margin-bottom: $spacing-sm;
+
+  @include respond-to($bp-lg) {
+    height: 50px;
+    margin-bottom: 18px;
+  }
+
+  background-color: currentColor;
+}
