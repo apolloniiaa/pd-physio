@@ -12,9 +12,24 @@ $color-ink: #1f201a;
 $color-forest-button: #283b03;
 $color-forest: #1d2b02;
 
+// ========================================
+// Visual direction: black / deep navy / electric blue (experiment)
+// ========================================
+
+$color-void: #05060a; // page background
+$color-navy: #080d24;
+$color-navy-deep: #0b1230;
+$color-electric: #315bff; // accent: glows, rules, buttons
+$color-electric-bright: #6b89ff; // accent as small text on black (AA contrast)
+$color-electric-hover: #2447e0;
+$color-bone: #f5f5f2; // primary text
+$color-cool-gray: #a3aabb; // secondary text
+
 // Navigation — change here to recolor the header.
-$color-header-bg: #122404;
-$color-header-text: #ffffff;
+$color-header-bg: rgba(5, 6, 10, 0.86);
+$color-header-text: $color-bone;
+$color-header-accent: $color-electric;
+$color-header-cta: $color-electric-bright;
 
 // ========================================
 // Layout

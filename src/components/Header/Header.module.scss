@@ -33,6 +33,11 @@ $nav-hover-lift: -1px;
   z-index: $z-header;
   width: 100%;
   background-color: $color-header-bg;
+  // Frosted near-black: the page shows through faintly while scrolling.
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  // Hairline in the accent colour, very faint.
+  box-shadow: inset 0 -1px 0 rgba($color-electric, 0.18);
   color: $color-header-text;
   font-family: $font-sans;
 }
@@ -49,7 +54,7 @@ $nav-hover-lift: -1px;
   column-gap: $spacing-xl;
   height: $header-height;
   padding-inline: $container-padding;
-  background-color: $color-header-bg;
+  background-color: transparent;
 
   @include respond-to($bp-md) {
     padding-inline: $spacing-xl;
@@ -68,6 +73,7 @@ $nav-hover-lift: -1px;
 // ========================================
 
 .logo {
+  position: relative;
   justify-self: start;
   display: flex;
   align-items: center;
@@ -82,14 +88,26 @@ $nav-hover-lift: -1px;
     outline: 1px solid $color-header-text;
     outline-offset: 6px;
   }
+
+  // Paints the mark in the exact accent colour: the logo PNG is used as an
+  // alpha mask over a solid fill, so the colour is #315BFF, not a filter
+  // approximation. The <img> underneath keeps the size, position and alt.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: $color-electric;
+    mask: url('/images/logo-mark.png') center / contain no-repeat;
+    -webkit-mask: url('/images/logo-mark.png') center / contain no-repeat;
+    pointer-events: none;
+  }
 }
 
 .logoMark {
   width: auto;
   height: $logo-mark-height;
-  // The mark asset is a single-colour transparent PNG; render it in the
-  // header text colour.
-  filter: brightness(0) invert(1);
+  // Invisible sizing element; the visible mark is .logo::before.
+  opacity: 0;
 }
 
 // ========================================
@@ -106,7 +124,7 @@ $nav-hover-lift: -1px;
     right: 0;
     bottom: -4px;
     height: 1px;
-    background-color: currentColor;
+    background-color: $color-header-accent;
     transform: scaleX(0);
     transform-origin: right center;
     transition: transform 450ms $ease-editorial;
@@ -180,6 +198,8 @@ $nav-hover-lift: -1px;
 .cta {
   display: none;
   justify-self: end;
+  color: $color-header-cta;
+  transition: color $transition-base;
   align-items: center;
   gap: $spacing-md;
   flex-shrink: 0;
@@ -196,6 +216,8 @@ $nav-hover-lift: -1px;
 
   &:hover,
   &:focus-visible {
+    color: $color-header-text;
+
     .ctaLabel {
       @include underline-reveal-active;
     }
@@ -267,7 +289,7 @@ $nav-hover-lift: -1px;
   position: fixed;
   inset: $header-height 0 0;
   z-index: 0;
-  background-color: rgba($color-header-bg, 0.55);
+  background-color: rgba($color-void, 0.6);
 
   @include respond-to($bp-lg) {
     display: none;
@@ -284,7 +306,8 @@ $nav-hover-lift: -1px;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: $spacing-lg $container-padding $spacing-2xl;
-  background-color: $color-header-bg;
+  // Solid, so page content never shows through the open menu.
+  background-color: $color-void;
   transform-origin: top center;
 
   @include respond-to($bp-md) {
@@ -336,6 +359,7 @@ $nav-hover-lift: -1px;
 .mobileCta {
   font-weight: $font-weight-medium;
   opacity: 1;
+  color: $color-header-cta;
 
   &:hover,
   &:focus-visible {

@@ -3,8 +3,10 @@
 @use '../../../styles/mixins' as *;
 @use '../../../styles/typography' as *;
 
-// Hero copy colour (bone white) for legibility over the photo.
-$color-hero-text: #f5f1e8;
+// Hero copy colours (black / navy / electric-blue direction).
+$color-hero-text: $color-bone;
+$color-hero-text-secondary: $color-cool-gray;
+$color-hero-body: #c9ceda; // lighter cool gray: supporting paragraph
 
 // Figma: 1440 × 666 frame including the (now separate) 64px header.
 $hero-height-desktop: 602px;
@@ -23,9 +25,39 @@ $hero-fill: calc(100svh - #{$header-height});
   min-height: $hero-fill;
   padding-block: $spacing-3xl $spacing-4xl;
   overflow: hidden;
-  background-color: #f1e8dc;
+  background-color: $color-void;
 
-  // Keep copy legible where the photo sits behind it on narrow screens.
+  // Electric-blue "brush" glow: a few offset ellipses inside an irregular,
+  // rotated blob, heavily blurred and screened onto the photo. Sits above
+  // the image and tint, below the copy.
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    left: -22%;
+    bottom: -6%;
+    width: 120%;
+    height: 46%;
+    border-radius: 42% 58% 70% 30% / 60% 38% 62% 40%;
+    background:
+      // bright core, off-centre
+      radial-gradient(ellipse 16% 34% at 30% 55%, rgba(150, 175, 255, 0.9), transparent 70%),
+      // main stroke body, uneven along its length
+      radial-gradient(ellipse 30% 46% at 26% 58%, rgba($color-electric, 0.95), transparent 72%),
+      radial-gradient(ellipse 26% 38% at 52% 44%, rgba($color-electric, 0.7), transparent 70%),
+      radial-gradient(ellipse 20% 30% at 74% 36%, rgba($color-electric, 0.45), transparent 70%),
+      // frayed tail and a stray fleck
+      radial-gradient(ellipse 12% 22% at 8% 72%, rgba($color-electric, 0.55), transparent 70%),
+      radial-gradient(ellipse 8% 14% at 88% 26%, rgba($color-electric, 0.35), transparent 70%),
+      radial-gradient(ellipse 70% 60% at 45% 50%, rgba($color-navy-deep, 0.9), transparent 78%);
+    filter: blur(44px);
+    transform: rotate(-17deg) skewX(-18deg);
+    opacity: 0.5;
+    mix-blend-mode: screen;
+    pointer-events: none;
+  }
+
+  // Near-black / navy tint over the photo; also keeps the copy legible.
   &::after {
     content: '';
     position: absolute;
@@ -33,9 +65,9 @@ $hero-fill: calc(100svh - #{$header-height});
     z-index: -1;
     background: linear-gradient(
       180deg,
-      rgba(246, 239, 229, 0.92) 0%,
-      rgba(246, 239, 229, 0.78) 55%,
-      rgba(246, 239, 229, 0.15) 100%
+      rgba($color-void, 0.9) 0%,
+      rgba($color-navy, 0.74) 55%,
+      rgba($color-navy-deep, 0.4) 100%
     );
   }
 
@@ -43,9 +75,9 @@ $hero-fill: calc(100svh - #{$header-height});
     &::after {
       background: linear-gradient(
         90deg,
-        rgba(246, 239, 229, 0.9) 0%,
-        rgba(246, 239, 229, 0.6) 55%,
-        rgba(246, 239, 229, 0) 80%
+        rgba($color-void, 0.9) 0%,
+        rgba($color-navy, 0.62) 55%,
+        rgba($color-navy-deep, 0.3) 85%
       );
     }
   }
@@ -57,8 +89,24 @@ $hero-fill: calc(100svh - #{$header-height});
     min-height: max(#{$hero-height-desktop}, #{$hero-fill});
     padding-block: 0;
 
+    &::before {
+      left: -16%;
+      bottom: -4%;
+      width: 104%;
+      height: 50%;
+      opacity: 0.58;
+    }
+
     &::after {
-      display: none;
+      background:
+        linear-gradient(
+          90deg,
+          rgba($color-void, 0.84) 0%,
+          rgba($color-navy, 0.55) 42%,
+          rgba($color-navy-deep, 0.22) 72%,
+          rgba($color-void, 0.38) 100%
+        ),
+        linear-gradient(180deg, rgba($color-void, 0) 55%, rgba($color-void, 0.55) 100%);
     }
   }
 }
@@ -88,12 +136,13 @@ $hero-fill: calc(100svh - #{$header-height});
   align-items: center;
   justify-content: space-between;
 
-  // Desktop: a wider frame pulls the copy ~70px left (x=60 at 1440), and the
-  // heavier bottom padding lifts the centred block ~60px above true centre.
+  // Desktop: editorial placement — copy anchored to the upper-left of the
+  // full-width Hero (not vertically centred), with generous edge margins.
   @include respond-to($bp-lg) {
-    width: min(100% - 64px, 1320px);
-    align-items: center;
-    padding-block: $spacing-2xl 168px;
+    width: 100%;
+    align-items: flex-start;
+    // Left offset ≈158px at 1440 (11vw), 40px min, 200px max on wide screens.
+    padding: clamp(64px, 11svh, 128px) clamp(40px, 3.5vw, 72px) $spacing-2xl clamp(40px, 11vw, 200px);
   }
 }
 
@@ -113,7 +162,8 @@ $hero-fill: calc(100svh - #{$header-height});
 .eyebrow {
   margin-bottom: $spacing-md;
 
-  color: $color-hero-text;
+  // Same electric blue as the navbar IDŐPONTFOGLALÁS link (all breakpoints).
+  color: $color-header-cta;
   font-size: $font-size-sm;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -137,22 +187,21 @@ $hero-fill: calc(100svh - #{$header-height});
   letter-spacing: -0.02em;
   line-height: 1.15;
 
-  // Desktop: 56px at 1440, up to 64px on wider screens.
-  // Two balanced lines: width capped in em (scales with the font size) and
-  // the browser evens out the line lengths instead of a hard break.
+  // Desktop: 80px at 1440 (57px at 1024, capped at 88px on wide screens).
+  // Width capped in em so the lines break the same way at every size:
+  // "Személyre szabott / kezelések a teljesebb / mozgásért".
   @include respond-to($bp-lg) {
-    max-width: 14.2em;
-    font-size: clamp(44px, 3.9vw, 64px);
+    max-width: 10.4em;
+    font-size: clamp(56px, 5.56vw, 88px);
     line-height: 1.08;
     letter-spacing: -0.025em;
-    text-wrap: balance;
   }
 }
 
 .body {
   max-width: 431px;
   margin-top: $spacing-lg;
-  color: $color-hero-text;
+  color: $color-hero-body;
   font-size: $font-size-lg;
   line-height: 1.5;
 
@@ -162,8 +211,8 @@ $hero-fill: calc(100svh - #{$header-height});
 
   @include respond-to($bp-lg) {
     max-width: 580px;
-    margin-top: 32px;
-    font-size: 21px;
+    margin-top: 44px;
+    font-size: 20px;
     line-height: 1.6;
   }
 }
@@ -186,8 +235,9 @@ $hero-fill: calc(100svh - #{$header-height});
 
   padding: 0 $spacing-lg 0 28px;
   border-radius: $radius-xs;
-  background-color: $color-forest-button;
-  color: $color-cream;
+  background-color: $color-electric;
+  color: $color-bone;
+  box-shadow: 0 10px 34px -12px rgba($color-electric, 0.75);
   font-size: $font-size-xs;
   font-weight: $font-weight-medium;
   letter-spacing: 0.08em;
@@ -196,7 +246,7 @@ $hero-fill: calc(100svh - #{$header-height});
   transition: background-color $transition-base;
 
   &:hover {
-    background-color: $color-forest;
+    background-color: $color-electric-hover;
   }
 
   &:hover .ctaArrow,
@@ -205,7 +255,7 @@ $hero-fill: calc(100svh - #{$header-height});
   }
 
   &:focus-visible {
-    outline: 2px solid $color-ink;
+    outline: 2px solid $color-bone;
     outline-offset: 3px;
   }
 }
@@ -229,12 +279,13 @@ $hero-fill: calc(100svh - #{$header-height});
   @include respond-to($bp-lg) {
     position: absolute;
     top: 50%;
-    right: 110px;
+    right: calc(110px + (100% - min(100% - 64px, 1320px)) / 2);
     display: flex;
     flex-direction: column;
     gap: 14px;
-    transform: translateY(-50%);
-    color: #f5eee5;
+    // Sits ~96px below the Hero's vertical centre (lower-middle area).
+    transform: translateY(calc(-50% + 96px));
+    color: $color-hero-text-secondary;
     font-size: 17px;
     letter-spacing: 0.12em;
   }
@@ -244,11 +295,10 @@ $hero-fill: calc(100svh - #{$header-height});
   width: 1px;
   height: 29px;
   margin-bottom: $spacing-sm;
+  background-color: $color-electric;
 
   @include respond-to($bp-lg) {
     height: 50px;
     margin-bottom: 18px;
   }
-
-  background-color: currentColor;
 }
