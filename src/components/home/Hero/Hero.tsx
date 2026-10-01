@@ -8,7 +8,7 @@ export default function Hero() {
   return (
     <section className={styles.hero} aria-labelledby='hero-title'>
       <Image
-        src='/images/home/hero.jpg'
+        src='/images/home/hero.png'
         alt=''
         fill
         priority

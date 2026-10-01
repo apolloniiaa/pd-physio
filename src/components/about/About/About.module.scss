@@ -1,0 +1,143 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/breakpoints' as *;
+@use '../../../styles/mixins' as *;
+@use '../../../styles/typography' as *;
+
+// Layout follows the Figma "About" frame (1440 wide):
+// image 483 × 516 at x=106, 146px gap, text column from x=735 (≈615 wide).
+// Only the palette is translated to the Home black / navy / electric-blue system.
+
+$about-image-width: 483px;
+$about-gap: 146px;
+$about-text-width: 615px;
+
+// Navbar + About fill the first viewport (svh with vh fallback, as on Home).
+$about-fill-fallback: calc(100vh - #{$header-height});
+$about-fill: calc(100svh - #{$header-height});
+
+.about {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: $about-fill-fallback;
+  min-height: $about-fill;
+  padding-block: $spacing-2xl $spacing-3xl;
+  overflow: hidden;
+  // Void background with a faint navy depth and a subtle electric-blue glow
+  // behind the photo.
+  background:
+    radial-gradient(ellipse 34% 40% at 20% 56%, rgba($color-electric, 0.14), transparent 72%),
+    radial-gradient(ellipse 60% 70% at 22% 50%, rgba($color-navy-deep, 0.9), transparent 70%),
+    $color-void;
+
+  @include respond-to($bp-lg) {
+    padding-block: $spacing-3xl;
+  }
+}
+
+.inner {
+  @include container;
+  display: grid;
+  gap: $spacing-2xl;
+
+  // Figma split: fixed-proportion image left, text right, centred vertically.
+  @include respond-to($bp-lg) {
+    grid-template-columns: minmax(0, $about-image-width) minmax(0, $about-text-width);
+    column-gap: clamp(64px, 10.14vw, $about-gap);
+    align-items: center;
+    justify-content: center;
+    width: min(100% - 96px, #{$about-image-width + $about-gap + $about-text-width});
+  }
+}
+
+// ---------- Image ----------
+
+.media {
+  position: relative;
+  width: min(100% - 16px, #{$about-image-width});
+  margin-left: 16px;
+  aspect-ratio: 483 / 516;
+
+  // Figma offset block behind the photo's top-left corner (navy / electric blue).
+  &::before {
+    content: '';
+    position: absolute;
+    top: -7.7%;
+    left: -8.3%;
+    width: 21.7%;
+    height: 26.9%;
+    background: linear-gradient(135deg, rgba($color-electric, 0.38) 0%, $color-navy-deep 100%);
+  }
+
+  // Figma thin arc in the left margin (grey hairline → faint electric blue).
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -154%;
+    width: 154%;
+    aspect-ratio: 1;
+    border: 1px solid rgba($color-electric, 0.3);
+    border-radius: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  @include respond-to($bp-lg) {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+.image {
+  z-index: 1;
+  border-radius: $radius-sm;
+  object-fit: cover;
+  // Portrait photo in a near-square frame: anchor near the top so the head stays in view.
+  object-position: 50% 8%;
+}
+
+// ---------- Copy ----------
+
+.content {
+  max-width: $about-text-width;
+}
+
+.eyebrow {
+  margin-bottom: $spacing-md;
+  color: $color-header-cta;
+  font-size: $font-size-sm;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  @include respond-to($bp-lg) {
+    margin-bottom: 20px;
+  }
+}
+
+// Figma: 48px, two lines — "Hiszek a tudatos és / tartós változásban."
+.title {
+  max-width: 11em;
+  color: $color-bone;
+  font-family: $font-display;
+  font-size: clamp(34px, 2.2vw + 1rem, $font-size-3xl);
+  font-weight: $font-weight-regular;
+  letter-spacing: -0.02em;
+  line-height: 1.19;
+}
+
+// Figma body: 16px / 24px, three paragraphs separated by one blank line.
+.body {
+  margin-top: $spacing-lg;
+  color: $color-cool-gray;
+  font-size: $font-size-md;
+  line-height: 1.5;
+
+  p + p {
+    margin-top: $spacing-lg;
+  }
+
+  @include respond-to($bp-lg) {
+    margin-top: 44px;
+  }
+}
