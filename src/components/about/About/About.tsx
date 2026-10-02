@@ -1,9 +1,11 @@
 import Image from 'next/image';
+import AboutBackdrop from './AboutBackdrop';
 import styles from './About.module.scss';
 
 export default function About() {
   return (
     <section id='rolunk' className={styles.about} aria-labelledby='about-title'>
+      <AboutBackdrop />
       <div className={styles.inner}>
         <div className={styles.media}>
           <Image

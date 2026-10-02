@@ -23,6 +23,9 @@ $about-fill: calc(100svh - #{$header-height});
   min-height: $about-fill;
   padding-block: $spacing-2xl $spacing-3xl;
   overflow: hidden;
+  // Keeps the editorial backdrop (z-index: -1) above this background but
+  // behind all of the content.
+  isolation: isolate;
   // Void background with a faint navy depth and a subtle electric-blue glow
   // behind the photo.
   background:
@@ -50,6 +53,170 @@ $about-fill: calc(100svh - #{$header-height});
   }
 }
 
+// ---------- Deep-space backdrop (AboutBackdrop.tsx) ----------
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+// Layer 3 — atmosphere: two huge, very soft light fields at the edges.
+.air {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  animation: air-breathe 56s ease-in-out infinite alternate;
+}
+
+.airTop {
+  top: -45%;
+  right: -35%;
+  width: 95vw;
+  height: 95vw;
+  background: radial-gradient(
+    closest-side,
+    rgba($color-electric, 0.07),
+    rgba($color-navy, 0.35) 55%,
+    rgba($color-navy, 0) 100%
+  );
+}
+
+.airBottom {
+  bottom: -55%;
+  left: -40%;
+  width: 90vw;
+  height: 90vw;
+  background: radial-gradient(
+    closest-side,
+    rgba($color-electric, 0.05),
+    rgba($color-navy, 0.3) 55%,
+    rgba($color-navy, 0) 100%
+  );
+  animation-duration: 68s;
+  animation-direction: alternate-reverse;
+}
+
+// Points sit under a mask that thins them out behind the copy, so they
+// never compete with the text (bottom on phones, right column on desktop).
+.points {
+  position: absolute;
+  inset: 0;
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 34%,
+    rgba(#000, 0.25) 50%,
+    rgba(#000, 0.25) 100%
+  );
+
+  @include respond-to($bp-lg) {
+    mask-image: radial-gradient(
+      ellipse 30% 46% at 72% 52%,
+      rgba(#000, 0.2) 0%,
+      rgba(#000, 0.2) 55%,
+      #000 100%
+    );
+  }
+}
+
+.pointTrack {
+  position: absolute;
+  display: block;
+  animation: drift-x var(--dur-x) ease-in-out var(--delay-x) infinite alternate;
+}
+
+.point {
+  display: block;
+  border-radius: 50%;
+  opacity: var(--o);
+  animation:
+    drift-y var(--dur-y) ease-in-out var(--delay-y) infinite alternate,
+    breathe var(--dur-o) ease-in-out var(--delay-o) infinite alternate;
+}
+
+// Layer 2 — mid-distance: a touch larger, with a very soft halo.
+.mid {
+  box-shadow: 0 0 5px rgba($color-electric, 0.35);
+}
+
+// Tones — only design-system colours.
+.toneGrey {
+  background-color: $color-cool-gray;
+}
+
+.toneBone {
+  background-color: $color-bone;
+}
+
+.toneBlue {
+  background-color: $color-electric-bright;
+}
+
+// A few points drift very slowly between muted blue and cool grey-blue.
+.toneShift {
+  animation:
+    drift-y var(--dur-y) ease-in-out var(--delay-y) infinite alternate,
+    breathe var(--dur-o) ease-in-out var(--delay-o) infinite alternate,
+    tone-shift var(--dur-c) ease-in-out var(--delay-c) infinite alternate;
+}
+
+@keyframes drift-x {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(var(--dx));
+  }
+}
+
+@keyframes drift-y {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(var(--dy));
+  }
+}
+
+// Occasional, very slight dimming and return.
+@keyframes breathe {
+  0%,
+  60% {
+    opacity: var(--o);
+  }
+
+  100% {
+    opacity: calc(var(--o) * 0.5);
+  }
+}
+
+@keyframes tone-shift {
+  from {
+    background-color: $color-electric-bright;
+  }
+
+  to {
+    background-color: $color-cool-gray;
+  }
+}
+
+@keyframes air-breathe {
+  from {
+    opacity: 0.75;
+    transform: translate(0, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-3%, 2%);
+  }
+}
+
 // ---------- Image ----------
 
 .media {
@@ -67,20 +234,6 @@ $about-fill: calc(100svh - #{$header-height});
     width: 21.7%;
     height: 26.9%;
     background: linear-gradient(135deg, rgba($color-electric, 0.38) 0%, $color-navy-deep 100%);
-  }
-
-  // Figma thin arc in the left margin (grey hairline → faint electric blue).
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: -154%;
-    width: 154%;
-    aspect-ratio: 1;
-    border: 1px solid rgba($color-electric, 0.3);
-    border-radius: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
   }
 
   @include respond-to($bp-lg) {
@@ -139,5 +292,14 @@ $about-fill: calc(100svh - #{$header-height});
 
   @include respond-to($bp-lg) {
     margin-top: 44px;
+  }
+}
+
+// Reduced motion: the whole backdrop is frozen.
+@media (prefers-reduced-motion: reduce) {
+  .air,
+  .pointTrack,
+  .point {
+    animation: none;
   }
 }
