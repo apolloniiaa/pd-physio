@@ -1,0 +1,241 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/breakpoints' as *;
+@use '../../../styles/mixins' as *;
+@use '../../../styles/typography' as *;
+
+// Contact page — Figma "Keress bizalommal." content in the dark editorial
+// PD Physio system. Static, no animation.
+
+$contact-serif: var(--font-contact-serif), 'Cormorant Garamond', Georgia, serif;
+$contact-body: #c9ceda; // supporting copy (same grey as Home)
+
+$contact-fill-fallback: calc(100vh - #{$header-height});
+$contact-fill: calc(100svh - #{$header-height});
+
+.contact {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: $contact-fill-fallback;
+  min-height: $contact-fill;
+  padding-block: $spacing-3xl $spacing-4xl;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 55% 55% at 78% 55%, rgba($color-navy-deep, 0.95), transparent 72%),
+    radial-gradient(ellipse 45% 45% at 8% 20%, rgba($color-navy, 0.9), transparent 70%),
+    $color-void;
+  color: $color-bone;
+
+  @include respond-to($bp-lg) {
+    padding-block: $spacing-4xl;
+  }
+}
+
+.lines {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  pointer-events: none;
+}
+
+.lineMain {
+  stroke: rgba($color-electric, 0.3);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.lineSoft {
+  stroke: rgba($color-electric-bright, 0.14);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+// ---------- Layout ----------
+
+.inner {
+  @include container;
+  display: grid;
+  gap: $spacing-3xl;
+
+  // Desktop: details left, map right, aligned to the details.
+  @include respond-to($bp-lg) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 560px);
+    align-items: end;
+    column-gap: clamp(56px, 7vw, 112px);
+    width: min(100% - 96px, 1180px);
+  }
+}
+
+// ---------- Copy ----------
+
+.title {
+  color: $color-bone;
+  font-family: $contact-serif;
+  font-size: clamp(46px, 5vw + 1rem, 80px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.02;
+}
+
+.lead {
+  max-width: 480px;
+  margin-top: $spacing-lg;
+  color: $contact-body;
+  font-size: $font-size-md;
+  line-height: 1.7;
+
+  @include respond-to($bp-lg) {
+    margin-top: 28px;
+    font-size: 17px;
+  }
+}
+
+.details {
+  margin-top: $spacing-2xl;
+  list-style: none;
+
+  @include respond-to($bp-lg) {
+    margin-top: 48px;
+  }
+}
+
+.detail {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-block: 18px;
+  border-bottom: 1px solid rgba($color-bone, 0.08);
+
+  &:first-child {
+    border-top: 1px solid rgba($color-bone, 0.08);
+  }
+}
+
+// Minimal outlined icon (electric blue), as on the other pages.
+.icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba($color-electric, 0.6);
+  border-radius: 50%;
+  color: $color-electric;
+}
+
+.detailText {
+  color: $color-bone;
+  font-size: 17px;
+  font-style: normal;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.link {
+  // Generous tap target on phones.
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: $color-bone;
+  text-decoration: underline;
+  text-decoration-color: rgba($color-electric, 0.5);
+  text-underline-offset: 5px;
+
+  &:hover {
+    color: $color-header-cta;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-bone;
+    outline-offset: 3px;
+  }
+}
+
+.meta {
+  display: block;
+  margin-top: -4px;
+  color: $color-cool-gray;
+  font-family: $font-mono;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+// ---------- Map ----------
+
+.mapBlock {
+  min-width: 0;
+}
+
+// Figma: rounded map panel; here graded to the dark navy palette.
+.map {
+  position: relative;
+  // Phones: taller crop so the map stays readable at full content width.
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid rgba($color-electric, 0.25);
+  border-radius: $radius-sm;
+  background-color: $color-navy;
+
+  // Tablet: wide Figma proportion (601 × 239) across the full width.
+  @include respond-to($bp-md) {
+    aspect-ratio: 601 / 239;
+  }
+
+  // Desktop: map column beside the details.
+  @include respond-to($bp-lg) {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+.mapFrame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  // Dark, monochrome map; the tint layer below adds the navy/blue colour.
+  filter: grayscale(1) invert(0.92) contrast(0.9) brightness(0.85);
+}
+
+.mapTint {
+  position: absolute;
+  inset: 0;
+  background-color: $color-navy-deep;
+  mix-blend-mode: color;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.mapLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 12px;
+  color: $color-header-cta;
+  font-size: $font-size-xs;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  &:hover {
+    color: $color-bone;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-bone;
+    outline-offset: 3px;
+  }
+}

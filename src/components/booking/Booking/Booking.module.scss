@@ -3,8 +3,8 @@
 @use '../../../styles/mixins' as *;
 @use '../../../styles/typography' as *;
 
-// Booking page — Figma "Foglalj időpontot online." + "Keress bizalommal."
-// content in the dark editorial PD Physio system. Static, no animation.
+// Booking page — Figma "Foglalj időpontot online." content in the dark
+// editorial PD Physio system. Static, no animation.
 
 $booking-serif: var(--font-booking-serif), 'Cormorant Garamond', Georgia, serif;
 $booking-body: #c9ceda; // supporting copy (same grey as Home)
@@ -245,111 +245,4 @@ $booking-fill: calc(100svh - #{$header-height});
 .image {
   object-fit: cover;
   object-position: 50% 25%;
-}
-
-// ---------- Contact ----------
-
-.contact {
-  padding-block: $spacing-3xl $spacing-4xl;
-  border-top: 1px solid rgba($color-bone, 0.08);
-
-  @include respond-to($bp-lg) {
-    padding-block: $spacing-4xl 120px;
-  }
-}
-
-.contactInner {
-  @include container;
-  display: grid;
-  gap: $spacing-2xl;
-
-  @include respond-to($bp-lg) {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
-    column-gap: clamp(64px, 8vw, 128px);
-    width: min(100% - 96px, 1180px);
-  }
-}
-
-.contactTitle {
-  color: $color-bone;
-  font-family: $booking-serif;
-  font-size: clamp(40px, 3.6vw + 1rem, 64px);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: 1.05;
-}
-
-.lead {
-  max-width: 480px;
-  margin-top: $spacing-lg;
-  color: $booking-body;
-  font-size: $font-size-md;
-  line-height: 1.7;
-}
-
-.details {
-  list-style: none;
-}
-
-.detail {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  padding-block: 22px;
-  border-bottom: 1px solid rgba($color-bone, 0.08);
-
-  &:first-child {
-    padding-top: 0;
-
-    @include respond-to($bp-lg) {
-      padding-top: 6px;
-    }
-  }
-}
-
-.detailIcon {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid rgba($color-electric, 0.6);
-  border-radius: 50%;
-  color: $color-electric;
-}
-
-.link,
-.address {
-  display: inline-block;
-  padding-block: 10px 0;
-  color: $color-bone;
-  font-size: 17px;
-  font-style: normal;
-  line-height: 1.5;
-}
-
-.link {
-  // Generous tap target on phones.
-  min-height: 44px;
-  text-decoration: underline;
-  text-decoration-color: rgba($color-electric, 0.5);
-  text-underline-offset: 5px;
-
-  &:hover {
-    color: $color-header-cta;
-  }
-
-  &:focus-visible {
-    outline: 2px solid $color-bone;
-    outline-offset: 3px;
-  }
-}
-
-.meta {
-  display: block;
-  color: $color-cool-gray;
-  font-family: $font-mono;
-  font-size: 12px;
-  letter-spacing: 0.06em;
 }

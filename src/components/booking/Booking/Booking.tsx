@@ -16,18 +16,7 @@ const editorialSerif = Cormorant_Garamond({
 // Petró Dániel URL/anchor yet — update here when one exists.
 const BOOKING_URL = 'https://borostyanfizio.com/';
 
-// Contact details from the Figma "Keress bizalommal." section. Figma shows
-// "+36 20 123 4567" there and "+36 20 234 0340" (linked) in the footer —
-// the linked number is used; confirm with the client before launch.
-const CONTACT = {
-  phoneDisplay: '+36 20 234 0340',
-  phoneHref: 'tel:+36202340340',
-  hours: 'H–P 8:00 – 18:00',
-  email: 'apgyogytorna@gmail.com',
-  address: ['Budapest, 1097. Vágóhíd utca 12–18.', '8 épület, 1. emelet'],
-};
-
-type IconName = 'calendar' | 'clock' | 'lotus' | 'phone' | 'mail' | 'pin';
+type IconName = 'calendar' | 'clock' | 'lotus';
 
 const ICONS: Record<IconName, ReactNode> = {
   calendar: (
@@ -47,21 +36,6 @@ const ICONS: Record<IconName, ReactNode> = {
       <path d='M12 18.5c-3.2-1.4-5-4-5-7.2 2.4.3 4.1 1.5 5 3.4.9-1.9 2.6-3.1 5-3.4 0 3.2-1.8 5.8-5 7.2z' />
       <path d='M12 14.7c-1.3-1.7-1.5-4.2 0-6.7 1.5 2.5 1.3 5 0 6.7z' />
       <path d='M5 18.5h14' />
-    </>
-  ),
-  phone: (
-    <path d='M7.2 4.5h2.6l1.2 3.4-1.7 1.2a10.6 10.6 0 0 0 5.6 5.6l1.2-1.7 3.4 1.2v2.6a1.8 1.8 0 0 1-1.9 1.8C11 18.2 5.8 13 5.4 6.4a1.8 1.8 0 0 1 1.8-1.9z' />
-  ),
-  mail: (
-    <>
-      <rect x='3.5' y='6' width='17' height='12' rx='1.5' />
-      <path d='M4 7l8 6 8-6' />
-    </>
-  ),
-  pin: (
-    <>
-      <path d='M12 20.5s6-5.6 6-10.5a6 6 0 0 0-12 0c0 4.9 6 10.5 6 10.5z' />
-      <circle cx='12' cy='10' r='2.2' />
     </>
   ),
 };
@@ -176,57 +150,6 @@ export default function Booking() {
               className={styles.image}
             />
           </div>
-        </div>
-      </section>
-
-      {/* ---------- Contact ---------- */}
-      <section
-        id='kapcsolat'
-        className={styles.contact}
-        aria-labelledby='contact-title'
-      >
-        <div className={styles.contactInner}>
-          <div>
-            <h2 id='contact-title' className={styles.contactTitle}>
-              Keress bizalommal.
-            </h2>
-            <p className={styles.lead}>
-              Amennyiben kérdése merül fel, időpontot szeretne egyeztetni, vagy
-              további információra van szüksége, állok rendelkezésére.
-            </p>
-          </div>
-
-          <ul className={styles.details}>
-            <li className={styles.detail}>
-              <span className={styles.detailIcon}>
-                <LineIcon name='phone' size={18} />
-              </span>
-              <span>
-                <a href={CONTACT.phoneHref} className={styles.link}>
-                  {CONTACT.phoneDisplay}
-                </a>
-                <span className={styles.meta}>{CONTACT.hours}</span>
-              </span>
-            </li>
-            <li className={styles.detail}>
-              <span className={styles.detailIcon}>
-                <LineIcon name='mail' size={18} />
-              </span>
-              <a href={`mailto:${CONTACT.email}`} className={styles.link}>
-                {CONTACT.email}
-              </a>
-            </li>
-            <li className={styles.detail}>
-              <span className={styles.detailIcon}>
-                <LineIcon name='pin' size={18} />
-              </span>
-              <address className={styles.address}>
-                {CONTACT.address[0]}
-                <br />
-                {CONTACT.address[1]}
-              </address>
-            </li>
-          </ul>
         </div>
       </section>
     </div>
