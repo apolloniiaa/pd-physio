@@ -123,7 +123,7 @@ const imageVariants: Variants = {
 export default function Services() {
   return (
     <section
-      id='szolgaltatasok'
+      id='services'
       className={styles.services}
       aria-labelledby='services-title'
     >

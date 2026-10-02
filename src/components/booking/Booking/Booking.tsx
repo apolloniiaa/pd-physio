@@ -82,7 +82,7 @@ export default function Booking() {
 
       {/* ---------- Online booking ---------- */}
       <section
-        id='idopontfoglalas'
+        id='booking'
         className={styles.booking}
         aria-labelledby='booking-title'
       >

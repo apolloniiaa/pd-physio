@@ -4,7 +4,7 @@ import styles from './About.module.scss';
 
 export default function About() {
   return (
-    <section id='rolunk' className={styles.about} aria-labelledby='about-title'>
+    <section id='about' className={styles.about} aria-labelledby='about-title'>
       <AboutBackdrop />
       <div className={styles.inner}>
         <div className={styles.media}>
@@ -19,7 +19,7 @@ export default function About() {
         </div>
 
         <div className={styles.content}>
-          <p className={styles.eyebrow}>Rólunk</p>
+          <p className={styles.eyebrow}>Rólam</p>
           <h1 id='about-title' className={styles.title}>
             Hiszek a tudatos és tartós változásban.
           </h1>

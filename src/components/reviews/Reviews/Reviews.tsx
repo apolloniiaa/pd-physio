@@ -72,7 +72,7 @@ function Stars({ count, className }: { count: number; className?: string }) {
 export default function Reviews() {
   return (
     <section
-      id='visszajelzesek'
+      id='reviews'
       className={`${styles.reviews} ${editorialSerif.variable}`}
       aria-labelledby='reviews-title'
     >

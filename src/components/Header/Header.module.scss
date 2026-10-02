@@ -42,6 +42,12 @@ $nav-hover-lift: -1px;
   font-family: $font-sans;
 }
 
+// Mobile menu open: the bar turns solid so no page content shows through
+// it (the menu is closed automatically at the desktop breakpoint).
+.headerMenuOpen {
+  background-color: $color-void;
+}
+
 .inner {
   position: relative;
   z-index: 2;
@@ -191,6 +197,12 @@ $nav-hover-lift: -1px;
   }
 }
 
+// Current page / section: the hover underline stays on (no lift).
+.navLinkActive {
+  opacity: 1;
+  @include underline-reveal-active;
+}
+
 // ========================================
 // Booking CTA — emphasised, not boxed
 // ========================================
@@ -302,7 +314,10 @@ $nav-hover-lift: -1px;
   left: 0;
   right: 0;
   z-index: 1;
-  max-height: calc(100dvh - #{$header-height});
+  // Fill the rest of the viewport so the page underneath is fully covered
+  // (vh fallback for browsers without dvh support).
+  height: calc(100vh - #{$header-height});
+  height: calc(100dvh - #{$header-height});
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: $spacing-lg $container-padding $spacing-2xl;
@@ -350,6 +365,11 @@ $nav-hover-lift: -1px;
     outline: 1px solid $color-header-text;
     outline-offset: 4px;
   }
+}
+
+// Current page / section in the mobile menu: full brightness.
+.mobileLinkActive {
+  opacity: 1;
 }
 
 .mobileCtaItem {

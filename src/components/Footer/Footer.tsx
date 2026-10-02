@@ -7,11 +7,11 @@ type FooterLink = {
 };
 
 const PAGES: FooterLink[] = [
-  { label: 'RÓLUNK', href: '/about' },
-  { label: 'SZOLGÁLTATÁSOK', href: '/services' },
-  { label: 'ÁRLISTA', href: '/pricing' },
-  { label: 'VISSZAJELZÉSEK', href: '/reviews' },
-  { label: 'KAPCSOLAT', href: '/contact' },
+  { label: 'RÓLAM', href: '/#about' },
+  { label: 'SZOLGÁLTATÁSOK', href: '/#services' },
+  { label: 'ÁRLISTA', href: '/#pricing' },
+  { label: 'VISSZAJELZÉSEK', href: '/#reviews' },
+  { label: 'KAPCSOLAT', href: '/#contact' },
 ];
 
 const CONTACT = {

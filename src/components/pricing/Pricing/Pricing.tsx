@@ -51,7 +51,7 @@ function ClockIcon() {
 export default function Pricing() {
   return (
     <section
-      id='arlista'
+      id='pricing'
       className={`${styles.pricing} ${editorialSerif.variable}`}
       aria-labelledby='pricing-title'
     >

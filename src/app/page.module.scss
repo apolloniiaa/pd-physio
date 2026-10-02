@@ -1,0 +1,15 @@
+@use '../styles/variables' as *;
+@use '../styles/breakpoints' as *;
+@use '../styles/mixins' as *;
+
+// Home one-page: offset for the in-page anchors (#about, #services, #pricing,
+// #reviews, #contact) so a section opened from the navbar starts below the
+// sticky navbar with some breathing room. Only affects anchor scrolling —
+// no padding or layout change.
+.home section[id] {
+  scroll-margin-top: calc(#{$header-height} + 12px);
+
+  @include respond-to($bp-lg) {
+    scroll-margin-top: calc(#{$header-height} + 24px);
+  }
+}

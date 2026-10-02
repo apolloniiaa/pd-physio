@@ -119,6 +119,7 @@ function ArrowRight() {
 export default function Hero() {
   return (
     <section
+      id='home'
       className={`${styles.hero} ${heroSerif.variable}`}
       aria-labelledby='hero-title'
     >

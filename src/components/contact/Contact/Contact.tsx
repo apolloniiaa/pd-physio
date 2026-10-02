@@ -65,7 +65,7 @@ function LineIcon({ name }: { name: IconName }) {
 export default function Contact() {
   return (
     <section
-      id='kapcsolat'
+      id='contact'
       className={`${styles.contact} ${editorialSerif.variable}`}
       aria-labelledby='contact-title'
     >

@@ -1,0 +1,41 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/breakpoints' as *;
+@use '../../../styles/mixins' as *;
+
+$reveal-shift: 28px;
+$reveal-ease: cubic-bezier(0.22, 1, 0.36, 1); // settling ease-out, no bounce
+
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, $reveal-shift, 0);
+  transition:
+    opacity 850ms $reveal-ease,
+    transform 850ms $reveal-ease;
+
+  &[data-revealed='true'] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// While a section is still waiting to reveal it sits $reveal-shift lower, so
+// a navbar anchor jump to it would land that much too close to the navbar
+// once it settles — compensate the anchor offset until it has revealed.
+@media (prefers-reduced-motion: no-preference) {
+  .reveal:not([data-revealed='true']) > section[id] {
+    scroll-margin-top: calc(#{$header-height} + 12px + #{$reveal-shift});
+
+    @include respond-to($bp-lg) {
+      scroll-margin-top: calc(#{$header-height} + 24px + #{$reveal-shift});
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal[data-revealed='true'] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

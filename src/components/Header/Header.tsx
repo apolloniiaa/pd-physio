@@ -1,8 +1,15 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type MouseEvent,
+} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   AnimatePresence,
   MotionConfig,
@@ -19,11 +26,12 @@ type NavItem = {
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { label: 'RÓLUNK', href: '/about' },
-  { label: 'SZOLGÁLTATÁSOK', href: '/services' },
-  { label: 'ÁRLISTA', href: '/pricing' },
-  { label: 'VISSZAJELZÉSEK', href: '/reviews' },
-  { label: 'KAPCSOLAT', href: '/contact' },
+  { label: 'HOME', href: '/' },
+  { label: 'RÓLAM', href: '/#about' },
+  { label: 'SZOLGÁLTATÁSOK', href: '/#services' },
+  { label: 'ÁRLISTA', href: '/#pricing' },
+  { label: 'VISSZAJELZÉSEK', href: '/#reviews' },
+  { label: 'KAPCSOLAT', href: '/#contact' },
 ];
 
 const BOOKING_ITEM: NavItem = {
@@ -35,6 +43,18 @@ const BOOKING_ITEM: NavItem = {
 const DESKTOP_QUERY = '(min-width: 1024px)';
 
 const MENU_ID = 'header-mobile-menu';
+
+// Home one-page sections in page order. 'home' is the Hero.
+const HOME_SECTION_IDS = ['home', 'about', 'services', 'pricing', 'reviews', 'contact'];
+
+// Stand-alone routes → the nav item that stays active on them.
+const ROUTE_ACTIVE_HREF: Record<string, NavItem['href']> = {
+  '/about': '/#about',
+  '/services': '/#services',
+  '/pricing': '/#pricing',
+  '/reviews': '/#reviews',
+  '/contact': '/#contact',
+};
 
 // ========================================
 // Motion
@@ -153,17 +173,56 @@ function ArrowIcon() {
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLElement>(null);
+  const [activeSection, setActiveSection] = useState('home');
 
+  const pathname = usePathname();
   const closeMenu = useCallback(() => setIsOpen(false), []);
+
+  // Logo + HOME: on the Home page itself, return to the very top (and drop
+  // any #section hash) instead of reloading; on other routes, navigate to /.
+  const handleHomeClick = useCallback(
+    (event: MouseEvent<HTMLAnchorElement>) => {
+      setIsOpen(false);
+      if (pathname !== '/') return;
+      event.preventDefault();
+      if (window.location.hash) {
+        window.history.replaceState(window.history.state, '', '/');
+      }
+      window.scrollTo({ top: 0 });
+    },
+    [pathname],
+  );
   const toggleMenu = useCallback(() => setIsOpen((open) => !open), []);
 
   // Lock background scroll and listen for Escape while the menu is open.
+  // overflow: hidden on <html> (the viewport) stops wheel/keyboard scrolling;
+  // the touchmove/wheel guard below also stops touch scrolling on mobile
+  // browsers that ignore it. <body> is left alone on purpose: hiding its
+  // overflow too would turn it into its own scroll container and break the
+  // sticky header (and the menu positioned under it) on a scrolled page. Only the menu panel itself may scroll (when its
+  // content is taller than the viewport). The page position is never moved,
+  // so nothing jumps when the menu closes.
   useEffect(() => {
     if (!isOpen) return;
 
-    const { body } = document;
-    const previousOverflow = body.style.overflow;
-    body.style.overflow = 'hidden';
+    const html = document.documentElement;
+    const previousHtmlOverflow = html.style.overflow;
+    html.style.overflow = 'hidden';
+
+    const blockBackgroundScroll = (event: Event) => {
+      const menu = menuRef.current;
+      const target = event.target;
+      const insideScrollableMenu =
+        menu !== null &&
+        target instanceof Node &&
+        menu.contains(target) &&
+        menu.scrollHeight > menu.clientHeight;
+      if (!insideScrollableMenu && event.cancelable) event.preventDefault();
+    };
+    const guardOptions: AddEventListenerOptions = { passive: false };
+    document.addEventListener('touchmove', blockBackgroundScroll, guardOptions);
+    document.addEventListener('wheel', blockBackgroundScroll, guardOptions);
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -175,10 +234,42 @@ export default function Header() {
     document.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      body.style.overflow = previousOverflow;
+      html.style.overflow = previousHtmlOverflow;
       document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('touchmove', blockBackgroundScroll);
+      document.removeEventListener('wheel', blockBackgroundScroll);
     };
   }, [isOpen]);
+
+  // Home scroll spy: the section crossing a thin band just above the middle
+  // of the viewport is the active one (IntersectionObserver, no scroll
+  // listener). Below the last section (footer) the last match stays active.
+  useEffect(() => {
+    if (pathname !== '/') return;
+
+    const sections = HOME_SECTION_IDS.map((id) =>
+      document.getElementById(id),
+    ).filter((el): el is HTMLElement => el !== null);
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      { rootMargin: '-40% 0px -55% 0px', threshold: 0 },
+    );
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [pathname]);
+
+  const activeHref: NavItem['href'] | null =
+    pathname === '/'
+      ? activeSection === 'home'
+        ? '/'
+        : `/#${activeSection}`
+      : (ROUTE_ACTIVE_HREF[pathname] ?? null);
 
   // Close the menu if the viewport grows into the desktop layout.
   useEffect(() => {
@@ -197,13 +288,15 @@ export default function Header() {
     // reducedMotion="user": transform animations are skipped for users who
     // prefer reduced motion; opacity fades remain so state changes stay clear.
     <MotionConfig reducedMotion='user'>
-      <header className={styles.header}>
+      <header
+        className={`${styles.header} ${isOpen ? styles.headerMenuOpen : ''}`}
+      >
         <div className={styles.inner}>
           <Link
             href='/'
             className={styles.logo}
             aria-label='PD Physio Studio – főoldal'
-            onClick={closeMenu}
+            onClick={handleHomeClick}
           >
             <Image
               src='/images/logo-mark.png'
@@ -219,7 +312,12 @@ export default function Header() {
             <ul className={styles.navList}>
               {NAV_ITEMS.map((item) => (
                 <li key={item.href}>
-                  <a href={item.href} className={styles.navLink}>
+                  <a
+                    href={item.href}
+                    className={`${styles.navLink} ${item.href === activeHref ? styles.navLinkActive : ''}`}
+                    aria-current={item.href === activeHref ? 'true' : undefined}
+                    onClick={item.href === '/' ? handleHomeClick : undefined}
+                  >
                     {item.label}
                   </a>
                 </li>
@@ -276,6 +374,7 @@ export default function Header() {
         <AnimatePresence>
           {isOpen && (
             <motion.nav
+              ref={menuRef}
               key='menu'
               id={MENU_ID}
               className={styles.mobileMenu}
@@ -290,8 +389,9 @@ export default function Header() {
                   <motion.li key={item.href} variants={itemVariants}>
                     <a
                       href={item.href}
-                      className={styles.mobileLink}
-                      onClick={closeMenu}
+                      className={`${styles.mobileLink} ${item.href === activeHref ? styles.mobileLinkActive : ''}`}
+                      aria-current={item.href === activeHref ? 'true' : undefined}
+                      onClick={item.href === '/' ? handleHomeClick : closeMenu}
                     >
                       {item.label}
                     </a>
