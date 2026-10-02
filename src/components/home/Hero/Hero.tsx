@@ -12,7 +12,7 @@ const heroSerif = Cormorant_Garamond({
   display: 'swap',
 });
 
-const BOOKING_HREF = '#idopontfoglalas';
+const BOOKING_HREF = '/booking';
 const DESCRIPTORS = ['Mozgás', 'Regeneráció', 'Egyensúly'];
 const BADGE = ['Movement', 'Recovery', 'Balance'];
 

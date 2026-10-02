@@ -1,0 +1,380 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/breakpoints' as *;
+@use '../../../styles/mixins' as *;
+@use '../../../styles/typography' as *;
+
+// Reviews page — dark editorial background, static line work, Google rating
+// header and four dark-glass review cards. Same palette and type system as
+// the other pages.
+
+$reviews-serif: var(--font-reviews-serif), 'Cormorant Garamond', Georgia, serif;
+
+// Navbar + Reviews fill at least the first viewport (svh with vh fallback).
+$reviews-fill-fallback: calc(100vh - #{$header-height});
+$reviews-fill: calc(100svh - #{$header-height});
+
+.reviews {
+  position: relative;
+  isolation: isolate;
+  min-height: $reviews-fill-fallback;
+  min-height: $reviews-fill;
+  padding-block: $spacing-3xl $spacing-4xl;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 55% 50% at 86% 8%, rgba($color-navy-deep, 0.95), transparent 72%),
+    radial-gradient(ellipse 50% 55% at 6% 92%, rgba($color-navy, 0.9), transparent 70%),
+    $color-void;
+
+  @include respond-to($bp-lg) {
+    padding-block: $spacing-4xl;
+  }
+}
+
+// ---------- Background line work (static) ----------
+
+.lines {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  pointer-events: none;
+}
+
+.lineMain {
+  stroke: rgba($color-electric, 0.26);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.lineSoft {
+  stroke: rgba($color-electric-bright, 0.1);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+// ---------- Layout ----------
+
+.inner {
+  @include container;
+
+  @include respond-to($bp-lg) {
+    width: min(100% - 96px, 1080px);
+  }
+}
+
+// ---------- Header: intro + Google rating ----------
+
+.head {
+  display: grid;
+  gap: $spacing-2xl;
+  margin-bottom: $spacing-2xl;
+
+  @include respond-to($bp-md) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    column-gap: $spacing-2xl;
+  }
+
+  @include respond-to($bp-lg) {
+    margin-bottom: 64px;
+  }
+}
+
+.intro {
+  max-width: 620px;
+}
+
+.eyebrow {
+  color: $color-header-cta;
+  font-size: $font-size-sm;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: $spacing-md;
+  color: $color-bone;
+  font-family: $reviews-serif;
+  font-size: clamp(42px, 4.4vw + 1rem, 76px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.02;
+
+  @include respond-to($bp-lg) {
+    margin-top: 20px;
+  }
+}
+
+.lead {
+  max-width: 34em;
+  margin-top: $spacing-lg;
+  color: $color-cool-gray;
+  font-size: $font-size-md;
+  line-height: 1.6;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  justify-self: start;
+  padding: 20px 26px;
+  border: 1px solid rgba($color-electric, 0.22);
+  border-radius: $radius-sm;
+  background: linear-gradient(160deg, rgba($color-navy-deep, 0.75), rgba($color-void, 0.4));
+
+  @include respond-to($bp-md) {
+    justify-self: end;
+  }
+}
+
+.score {
+  color: $color-bone;
+  font-family: $reviews-serif;
+  font-size: 64px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+}
+
+.ratingMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 22px;
+  border-left: 1px solid rgba($color-bone, 0.12);
+}
+
+.source {
+  color: $color-bone;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.count {
+  color: $color-cool-gray;
+  font-family: $font-mono;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+// ---------- Stars (electric blue) ----------
+
+.stars {
+  display: inline-flex;
+  gap: 3px;
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.starOn {
+  fill: $color-electric-bright;
+}
+
+.starOff {
+  fill: rgba($color-cool-gray, 0.3);
+}
+
+// ---------- Grid ----------
+
+.grid {
+  display: grid;
+  gap: $spacing-lg;
+  list-style: none;
+
+  @include respond-to($bp-md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include respond-to($bp-lg) {
+    gap: 32px 40px;
+  }
+}
+
+// Grid item animated in by Framer Motion (ReviewCards.tsx).
+.cardItem {
+  display: flex;
+}
+
+// ---------- Dark-glass review card ----------
+
+.card {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  padding: 30px 26px 28px;
+  border: 1px solid rgba($color-bone, 0.1);
+  border-radius: $radius-sm;
+  background:
+    radial-gradient(ellipse 70% 60% at 0% 0%, rgba($color-electric, 0.06), transparent 70%),
+    linear-gradient(
+      160deg,
+      rgba($color-navy-deep, 0.82) 0%,
+      rgba($color-navy, 0.6) 55%,
+      rgba($color-void, 0.55) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 rgba($color-bone, 0.06),
+    0 24px 56px -30px rgba(0, 0, 0, 0.75);
+  transition:
+    transform 500ms $ease-editorial,
+    border-color 500ms $ease-editorial,
+    box-shadow 500ms $ease-editorial;
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: rgba($color-electric, 0.45);
+    box-shadow:
+      inset 0 1px 0 rgba($color-bone, 0.08),
+      0 0 0 1px rgba($color-electric, 0.08),
+      0 18px 48px -26px rgba($color-electric, 0.35),
+      0 24px 56px -30px rgba(0, 0, 0, 0.75);
+  }
+
+  @include respond-to($bp-lg) {
+    padding: 40px 44px 36px;
+  }
+}
+
+.cardTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+.date {
+  color: $color-cool-gray;
+  font-family: $font-mono;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+.quote {
+  margin-top: 28px;
+  margin-bottom: 36px;
+  color: $color-bone;
+  font-size: $font-size-md;
+  line-height: 1.65;
+  overflow-wrap: break-word;
+
+  @include respond-to($bp-lg) {
+    font-size: 17px;
+  }
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 22px;
+  border-top: 1px solid rgba($color-bone, 0.08);
+}
+
+.index {
+  color: $color-header-cta;
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  letter-spacing: 0.1em;
+}
+
+.authorText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.name {
+  color: $color-bone;
+  font-size: $font-size-sm;
+  font-weight: 500;
+}
+
+.attribution {
+  color: rgba($color-cool-gray, 0.8);
+  font-family: $font-mono;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+// ---------- Google CTA ----------
+
+.ctaWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: $spacing-2xl;
+
+  @include respond-to($bp-lg) {
+    margin-top: 56px;
+  }
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 100%;
+  padding: 14px 26px;
+  border: 1px solid rgba($color-electric, 0.5);
+  border-radius: 999px;
+  color: $color-bone;
+  font-size: $font-size-sm;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    border-color 400ms $ease-editorial,
+    background-color 400ms $ease-editorial;
+
+  &:hover {
+    border-color: $color-electric-bright;
+    background-color: rgba($color-electric, 0.1);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-electric-bright;
+    outline-offset: 3px;
+  }
+}
+
+.ctaArrow {
+  color: $color-electric-bright;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+// Reduced motion: cards appear immediately (overrides Framer Motion's inline
+// start styles) and the hover keeps its colour change but drops the lift.
+@media (prefers-reduced-motion: reduce) {
+  .cardItem {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .card,
+  .cta {
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}

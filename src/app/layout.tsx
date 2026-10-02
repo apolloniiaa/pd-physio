@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { IBM_Plex_Mono, IBM_Plex_Sans, Space_Grotesk } from 'next/font/google';
+import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
 import './globals.scss';
 
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       <body>
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );

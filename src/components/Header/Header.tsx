@@ -15,20 +15,20 @@ import styles from './Header.module.scss';
 
 type NavItem = {
   label: string;
-  href: `#${string}`;
+  href: `/${string}`;
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { label: 'RÓLUNK', href: '#rolunk' },
-  { label: 'SZOLGÁLTATÁSOK', href: '#szolgaltatasok' },
-  { label: 'ÁRLISTA', href: '#arlista' },
-  { label: 'MEGOLDÁSAIM', href: '#megoldasaim' },
-  { label: 'VISSZAJELZÉSEK', href: '#visszajelzesek' },
+  { label: 'RÓLUNK', href: '/about' },
+  { label: 'SZOLGÁLTATÁSOK', href: '/services' },
+  { label: 'ÁRLISTA', href: '/pricing' },
+  { label: 'VISSZAJELZÉSEK', href: '/reviews' },
+  { label: 'KAPCSOLAT', href: '/contact' },
 ];
 
 const BOOKING_ITEM: NavItem = {
   label: 'IDŐPONTFOGLALÁS',
-  href: '#idopontfoglalas',
+  href: '/booking',
 };
 
 /** Must match $bp-lg in src/styles/_breakpoints.scss */

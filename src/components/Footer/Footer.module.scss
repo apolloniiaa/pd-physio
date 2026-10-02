@@ -1,0 +1,211 @@
+@use '../../styles/variables' as *;
+@use '../../styles/breakpoints' as *;
+@use '../../styles/mixins' as *;
+@use '../../styles/typography' as *;
+
+// Global footer — the closing section of every page. Same palette, type and
+// line work as the page sections; static apart from hover states.
+// The background spans the full viewport width; only .inner is centred.
+
+.footer {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  padding-top: $spacing-3xl;
+  overflow: hidden;
+  border-top: 1px solid rgba($color-bone, 0.06);
+  background:
+    radial-gradient(ellipse 55% 60% at 12% 0%, rgba($color-navy-deep, 0.9), transparent 70%),
+    radial-gradient(ellipse 50% 50% at 92% 100%, rgba($color-navy, 0.7), transparent 72%),
+    $color-void;
+
+  @include respond-to($bp-lg) {
+    padding-top: $spacing-4xl;
+  }
+}
+
+// ---------- Background line work (static) ----------
+
+.lines {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  pointer-events: none;
+}
+
+.lineMain {
+  stroke: rgba($color-electric, 0.16);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.lineSoft {
+  stroke: rgba($color-electric-bright, 0.06);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+// ---------- Layout ----------
+
+.inner {
+  @include container;
+
+  @include respond-to($bp-lg) {
+    width: min(100% - 96px, 1200px);
+  }
+}
+
+.grid {
+  display: grid;
+  gap: $spacing-2xl;
+
+  // Tablet: CTA block across the top, pages + contact side by side.
+  @include respond-to($bp-md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: $spacing-2xl;
+
+    .intro {
+      grid-column: 1 / -1;
+    }
+  }
+
+  // Desktop: CTA block | pages | contact.
+  @include respond-to($bp-lg) {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.8fr) minmax(0, 1fr);
+    column-gap: 64px;
+
+    .intro {
+      grid-column: auto;
+    }
+  }
+}
+
+// ---------- CTA block ----------
+
+// Same filled electric pill as the Booking page CTA.
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-2xl;
+  min-width: 260px;
+  max-width: 100%;
+  min-height: 56px;
+  padding: 0 28px 0 32px;
+  border: 1px solid $color-electric;
+  border-radius: 999px;
+  background-color: $color-electric;
+  color: $color-bone;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  letter-spacing: 0.16em;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    background-color 300ms $ease-editorial,
+    border-color 300ms $ease-editorial;
+
+  &:hover {
+    border-color: $color-electric-hover;
+    background-color: $color-electric-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-bone;
+    outline-offset: 3px;
+  }
+}
+
+.ctaArrow {
+  flex-shrink: 0;
+}
+
+// ---------- Columns ----------
+
+.heading {
+  color: $color-header-cta;
+  font-size: $font-size-xs;
+  letter-spacing: 0.16em;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin-top: $spacing-md;
+  list-style: none;
+}
+
+// Generous touch targets (≥ 44px rows).
+.navLink,
+.detailLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: none;
+  transition: color 300ms $ease-editorial;
+
+  &:hover {
+    color: $color-electric;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-electric-bright;
+    outline-offset: 2px;
+  }
+}
+
+.navLink {
+  color: $color-bone;
+  font-size: $font-size-sm;
+  letter-spacing: 0.1em;
+}
+
+.detailLink {
+  color: $color-bone;
+  font-size: $font-size-md;
+  overflow-wrap: anywhere;
+}
+
+.address {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 10px;
+  color: $color-cool-gray;
+  font-size: $font-size-sm;
+  font-style: normal;
+  line-height: 1.6;
+}
+
+// ---------- Bottom bar ----------
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-sm $spacing-lg;
+  margin-top: $spacing-3xl;
+  padding-block: $spacing-lg $spacing-xl;
+  border-top: 1px solid rgba($color-bone, 0.06);
+  color: rgba($color-cool-gray, 0.8);
+  font-family: $font-mono;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+
+  @include respond-to($bp-lg) {
+    margin-top: $spacing-4xl;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta,
+  .navLink,
+  .detailLink {
+    transition: none;
+  }
+}
