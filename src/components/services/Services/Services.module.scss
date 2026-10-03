@@ -57,18 +57,6 @@ $card-text: #c9ceda; // same supporting-copy grey as the Hero body
   }
 }
 
-.eyebrow {
-  margin-bottom: $spacing-md;
-  color: $color-header-cta;
-  font-size: $font-size-sm;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-
-  @include respond-to($bp-lg) {
-    margin-bottom: 20px;
-  }
-}
-
 .title {
   color: $color-bone;
   font-family: $font-display;

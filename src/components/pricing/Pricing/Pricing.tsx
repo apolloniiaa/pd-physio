@@ -1,4 +1,5 @@
 import { Cormorant_Garamond } from 'next/font/google';
+import AboutBackdrop from '@/components/about/About/AboutBackdrop';
 import { PricingCardItem, PricingGrid } from './PricingCards';
 import styles from './Pricing.module.scss';
 
@@ -55,6 +56,9 @@ export default function Pricing() {
       className={`${styles.pricing} ${editorialSerif.variable}`}
       aria-labelledby='pricing-title'
     >
+      {/* Same drifting-particle atmosphere as Rólam (own seed). */}
+      <AboutBackdrop seed={101} />
+
       {/* Static, oversized line work behind the cards. */}
       <svg
         className={styles.lines}
@@ -69,7 +73,6 @@ export default function Pricing() {
 
       <div className={styles.inner}>
         <header className={styles.intro}>
-          <p className={styles.eyebrow}>Gyógytorna · Manuálterápia</p>
           <h1 id='pricing-title' className={styles.title}>
             Árlista
           </h1>

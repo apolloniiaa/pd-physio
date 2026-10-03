@@ -10,10 +10,22 @@
 $about-image-width: 483px;
 $about-gap: 146px;
 $about-text-width: 615px;
+// Large desktops only (≥ 1600px): a slightly narrower, taller portrait
+// (shows more of the arms), a wider text column and larger type.
+$about-image-width-xl: 505px;
+$about-text-width-xl: 700px;
+$about-xl: 1600px;
 
 // Navbar + About fill the first viewport (svh with vh fallback, as on Home).
 $about-fill-fallback: calc(100vh - #{$header-height});
 $about-fill: calc(100svh - #{$header-height});
+
+// Shared atmospheric palette (same on Árlista, Rólam and Kapcsolat):
+// pale daylight blue, a paler mist, and a muted midnight blue used to lift
+// the dark base (#0B1230 mixed ~20% toward #A1C4FD).
+$atmo-sky: #a1c4fd;
+$atmo-mist: #c2e9fb;
+$atmo-lift: #29365a;
 
 .about {
   position: relative;
@@ -26,12 +38,30 @@ $about-fill: calc(100svh - #{$header-height});
   // Keeps the editorial backdrop (z-index: -1) above this background but
   // behind all of the content.
   isolation: isolate;
-  // Void background with a faint navy depth and a subtle electric-blue glow
-  // behind the photo.
+  // Atmospheric background: diffused blue light concentrated behind the
+  // portrait (left / middle), built from several stacked soft fields so it
+  // reads as light rather than a single radial — a faint bone core, a
+  // #C2E9FB mist, a wider #A1C4FD glow and a deeper #315BFF falloff — fading
+  // into deep navy, with the right side kept significantly darker.
   background:
-    radial-gradient(ellipse 34% 40% at 20% 56%, rgba($color-electric, 0.14), transparent 72%),
-    radial-gradient(ellipse 60% 70% at 22% 50%, rgba($color-navy-deep, 0.9), transparent 70%),
-    $color-void;
+    radial-gradient(ellipse 24% 30% at 27% 46%, rgba($color-bone, 0.1) 0%, rgba($color-bone, 0.04) 45%, transparent 80%),
+    radial-gradient(ellipse 40% 50% at 26% 48%, rgba($atmo-mist, 0.18) 0%, rgba($atmo-mist, 0.07) 50%, transparent 85%),
+    radial-gradient(ellipse 68% 82% at 25% 50%, rgba($atmo-sky, 0.3) 0%, rgba($atmo-sky, 0.14) 38%, rgba($atmo-sky, 0.05) 64%, transparent 90%),
+    radial-gradient(ellipse 85% 100% at 22% 52%, rgba($color-electric, 0.13) 0%, rgba($color-electric, 0.05) 45%, transparent 78%),
+    linear-gradient(90deg, transparent 0%, transparent 42%, rgba($color-void, 0.6) 100%),
+    radial-gradient(ellipse 130% 120% at 28% 50%, transparent 50%, rgba($color-void, 0.6) 100%),
+    linear-gradient(105deg, $color-navy-deep 0%, $color-navy 48%, $color-void 100%);
+
+  // Very fine grain over the gradient to prevent visible banding.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    pointer-events: none;
+  }
 
   @include respond-to($bp-lg) {
     padding-block: $spacing-3xl;
@@ -50,6 +80,16 @@ $about-fill: calc(100svh - #{$header-height});
     align-items: center;
     justify-content: center;
     width: min(100% - 96px, #{$about-image-width + $about-gap + $about-text-width});
+  }
+
+  // ≥ 1600px: slightly narrower image column, wider text column, same gap.
+  // The block is nudged right so the *visible* composition (the blue square
+  // overhanging the portrait on the left, and the ragged right edge of the
+  // text) sits optically centred in the viewport.
+  @media (min-width: $about-xl) {
+    grid-template-columns: minmax(0, $about-image-width-xl) minmax(0, $about-text-width-xl);
+    width: min(100% - 96px, #{$about-image-width-xl + $about-gap + $about-text-width-xl});
+    translate: 22px 0;
   }
 }
 
@@ -240,6 +280,11 @@ $about-fill: calc(100svh - #{$header-height});
     width: 100%;
     margin-left: 0;
   }
+
+  // Large desktops: slightly narrower and taller crop (more of the arms).
+  @media (min-width: $about-xl) {
+    aspect-ratio: 505 / 585;
+  }
 }
 
 .image {
@@ -254,17 +299,9 @@ $about-fill: calc(100svh - #{$header-height});
 
 .content {
   max-width: $about-text-width;
-}
 
-.eyebrow {
-  margin-bottom: $spacing-md;
-  color: $color-header-cta;
-  font-size: $font-size-sm;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-
-  @include respond-to($bp-lg) {
-    margin-bottom: 20px;
+  @media (min-width: $about-xl) {
+    max-width: $about-text-width-xl;
   }
 }
 
@@ -277,6 +314,10 @@ $about-fill: calc(100svh - #{$header-height});
   font-weight: $font-weight-regular;
   letter-spacing: -0.02em;
   line-height: 1.19;
+
+  @media (min-width: $about-xl) {
+    font-size: 56px;
+  }
 }
 
 // Figma body: 16px / 24px, three paragraphs separated by one blank line.
@@ -293,6 +334,18 @@ $about-fill: calc(100svh - #{$header-height});
   @include respond-to($bp-lg) {
     margin-top: 44px;
   }
+
+  // Large desktops: noticeably larger, airier body copy that fills the
+  // wider column.
+  @media (min-width: $about-xl) {
+    margin-top: 48px;
+    font-size: 19px;
+    line-height: 1.68;
+
+    p + p {
+      margin-top: 28px;
+    }
+  }
 }
 
 // Reduced motion: the whole backdrop is frozen.
@@ -302,4 +355,30 @@ $about-fill: calc(100svh - #{$header-height});
   .point {
     animation: none;
   }
+}
+
+// ---------- Architectural arcs (static, behind everything) ----------
+// Two very large, hairline arcs that run off the viewport: one sweeping
+// down through the portrait area, one fainter along the lower-left edge.
+
+.arcs {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  pointer-events: none;
+}
+
+.arcMain {
+  stroke: rgba($atmo-sky, 0.2);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.arcSoft {
+  stroke: rgba($atmo-mist, 0.09);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
 }

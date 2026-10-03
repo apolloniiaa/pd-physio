@@ -86,7 +86,7 @@ function createLayer(seed: number, count: number, options: LayerOptions): Partic
   });
 }
 
-const DISTANT = createLayer(7, 64, {
+const distantLayer = (seed: number) => createLayer(7 + seed, 64, {
   size: [1, 1.6],
   opacity: [0.1, 0.32],
   drift: [3, 9],
@@ -95,7 +95,7 @@ const DISTANT = createLayer(7, 64, {
   shiftShare: 0.06,
 });
 
-const MID = createLayer(23, 12, {
+const midLayer = (seed: number) => createLayer(23 + seed, 12, {
   size: [1.8, 2.8],
   opacity: [0.14, 0.28],
   drift: [10, 22],
@@ -126,7 +126,20 @@ function Points({ items, layer = '' }: { items: Particle[]; layer?: string }) {
   );
 }
 
-export default function AboutBackdrop() {
+// Default seed (About). Árlista and Kapcsolat reuse the same atmosphere with
+// their own seed so the point patterns differ between sections.
+const LAYERS = new Map<number, { distant: Particle[]; mid: Particle[] }>();
+function layersFor(seed: number) {
+  let layers = LAYERS.get(seed);
+  if (!layers) {
+    layers = { distant: distantLayer(seed), mid: midLayer(seed) };
+    LAYERS.set(seed, layers);
+  }
+  return layers;
+}
+
+export default function AboutBackdrop({ seed = 0 }: { seed?: number }) {
+  const { distant, mid } = layersFor(seed);
   return (
     <div className={styles.backdrop} aria-hidden='true'>
       {/* Layer 3 — atmosphere (behind the points). */}
@@ -134,8 +147,8 @@ export default function AboutBackdrop() {
       <span className={`${styles.air} ${styles.airBottom}`} />
 
       <div className={styles.points}>
-        <Points items={DISTANT} />
-        <Points items={MID} layer={styles.mid} />
+        <Points items={distant} />
+        <Points items={mid} layer={styles.mid} />
       </div>
     </div>
   );

@@ -181,25 +181,170 @@ $reviews-fill: calc(100svh - #{$header-height});
   fill: rgba($color-cool-gray, 0.3);
 }
 
-// ---------- Grid ----------
+// ---------- Scroll-driven timeline ----------
+// Mobile: one line on the left, cards beside it.
+// Desktop (lg): line in the centre, cards alternating left / right.
 
-.grid {
+$tl-x-mobile: 7px; // line position on mobile
+$tl-card-offset-mobile: 32px; // card start on mobile
+$tl-gap-desktop: 56px; // card edge ↔ centre line on desktop
+
+.timeline {
+  position: relative;
   display: grid;
-  gap: $spacing-lg;
+  gap: $spacing-xl;
+  padding-block: $spacing-md;
   list-style: none;
 
-  @include respond-to($bp-md) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   @include respond-to($bp-lg) {
-    gap: 32px 40px;
+    gap: 72px;
+    padding-block: $spacing-xl;
   }
 }
 
-// Grid item animated in by Framer Motion (ReviewCards.tsx).
-.cardItem {
+.track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: $tl-x-mobile;
+  width: 1px;
+  background-color: rgba($color-cool-gray, 0.16);
+  transform: translateX(-50%);
+  pointer-events: none;
+
+  @include respond-to($bp-lg) {
+    left: 50%;
+  }
+}
+
+.trackFill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba($color-electric, 0.35), $color-electric);
+  transform-origin: top center;
+}
+
+.marker {
+  position: absolute;
+  left: $tl-x-mobile;
+  z-index: 2;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background-color: $color-electric;
+  box-shadow:
+    0 0 0 4px rgba($color-electric, 0.16),
+    0 0 14px rgba($color-electric, 0.4);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+
+  @include respond-to($bp-lg) {
+    left: 50%;
+  }
+}
+
+.timelineItem {
+  position: relative;
+  display: grid;
+  padding-left: $tl-card-offset-mobile;
+
+  // Hairline connecting the card to the line.
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: $tl-x-mobile;
+    width: $tl-card-offset-mobile - $tl-x-mobile;
+    height: 1px;
+    background-color: rgba($color-cool-gray, 0.18);
+    transition: background-color 500ms $ease-editorial;
+  }
+
+  @include respond-to($bp-lg) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: $tl-gap-desktop * 2;
+    padding-left: 0;
+
+    &::before {
+      left: calc(50% - #{$tl-gap-desktop});
+      width: $tl-gap-desktop;
+    }
+
+    &:nth-of-type(even)::before {
+      left: 50%;
+    }
+  }
+}
+
+// Static node on the line at each card's centre.
+.node {
+  position: absolute;
+  top: 50%;
+  left: $tl-x-mobile;
+  z-index: 1;
+  width: 9px;
+  height: 9px;
+  border: 1px solid rgba($color-cool-gray, 0.45);
+  border-radius: 50%;
+  background-color: $color-void;
+  transform: translate(-50%, -50%);
+  transition:
+    background-color 500ms $ease-editorial,
+    border-color 500ms $ease-editorial;
+
+  @include respond-to($bp-lg) {
+    left: 50%;
+  }
+}
+
+.timelineCard {
   display: flex;
+  min-width: 0;
+
+  @include respond-to($bp-lg) {
+    grid-column: 1;
+  }
+}
+
+.timelineItem:nth-of-type(even) .timelineCard {
+  @include respond-to($bp-lg) {
+    grid-column: 2;
+  }
+}
+
+// Reviews the marker has passed: filled node, blue connector.
+.timelineItemPassed {
+  .node {
+    border-color: $color-electric;
+    background-color: $color-electric;
+  }
+
+  &::before {
+    background-color: rgba($color-electric, 0.45);
+  }
+}
+
+// Inactive cards stay readable but quieter; the active one comes forward.
+.timelineItem .card {
+  opacity: 0.72;
+  transition:
+    opacity 500ms $ease-editorial,
+    transform 500ms $ease-editorial,
+    border-color 500ms $ease-editorial,
+    box-shadow 500ms $ease-editorial;
+}
+
+.timelineItem .card:hover {
+  opacity: 1;
+}
+
+.timelineItemActive .card {
+  opacity: 1;
+  border-color: rgba($color-electric, 0.32);
+  box-shadow:
+    inset 0 1px 0 rgba($color-bone, 0.08),
+    0 18px 48px -30px rgba($color-electric, 0.3),
+    0 24px 56px -30px rgba(0, 0, 0, 0.75);
 }
 
 // ---------- Dark-glass review card ----------
@@ -364,13 +509,16 @@ $reviews-fill: calc(100svh - #{$header-height});
 // Reduced motion: cards appear immediately (overrides Framer Motion's inline
 // start styles) and the hover keeps its colour change but drops the lift.
 @media (prefers-reduced-motion: reduce) {
-  .cardItem {
+  .timelineCard {
     opacity: 1 !important;
     transform: none !important;
   }
 
   .card,
-  .cta {
+  .cta,
+  .node,
+  .timelineItem::before,
+  .timelineItem .card {
     transition: none;
   }
 

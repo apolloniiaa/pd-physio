@@ -130,7 +130,6 @@ export default function Services() {
       <div className={styles.inner}>
         <header className={styles.intro}>
           <div>
-            <p className={styles.eyebrow}>Szolgáltatások</p>
             <h1 id='services-title' className={styles.title}>
               <span className={styles.titleLine}>Mozgásban rejlő</span>
               <span className={styles.titleLine}>lehetőségek.</span>

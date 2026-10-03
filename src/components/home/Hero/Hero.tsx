@@ -1,5 +1,11 @@
-import type { ReactNode } from 'react';
 import Image from 'next/image';
+import {
+  Activity,
+  Dumbbell,
+  HeartHandshake,
+  Leaf,
+  type LucideIcon,
+} from 'lucide-react';
 import { Cormorant_Garamond } from 'next/font/google';
 import styles from './Hero.module.scss';
 
@@ -45,51 +51,20 @@ const FEATURES: Feature[] = [
   },
 ];
 
-/** Minimal 1px line icons (24 × 24 grid, currentColor). */
-function FeatureIcon({ name }: { name: Feature['icon'] }) {
-  const paths: Record<Feature['icon'], ReactNode> = {
-    spine: (
-      <>
-        <path d='M12 3v18' />
-        <rect x='9' y='4.5' width='6' height='3' rx='1.2' />
-        <rect x='8.5' y='9.5' width='7' height='3' rx='1.2' />
-        <rect x='9' y='14.5' width='6' height='3' rx='1.2' />
-      </>
-    ),
-    strength: (
-      <>
-        <path d='M7 12h10' />
-        <rect x='4' y='8' width='3' height='8' rx='1' />
-        <rect x='17' y='8' width='3' height='8' rx='1' />
-        <path d='M2.5 10.5v3M21.5 10.5v3' />
-      </>
-    ),
-    leaf: (
-      <>
-        <path d='M6 18c0-7 5-12 13-12 0 8-5 13-12 13' />
-        <path d='M6 18l7-7' />
-      </>
-    ),
-    heart: (
-      <path d='M12 19s-7-4.4-7-9.5A3.8 3.8 0 0 1 12 7.6a3.8 3.8 0 0 1 7 1.9C19 14.6 12 19 12 19z' />
-    ),
-  };
+// Feature icons from Lucide (same library as Contact / Footer), drawn as
+// thin bone-white glyphs inside the existing electric-blue ring.
+const FEATURE_ICONS: Record<Feature['icon'], LucideIcon> = {
+  spine: Activity,
+  strength: Dumbbell,
+  leaf: Leaf,
+  heart: HeartHandshake,
+};
 
+function FeatureIcon({ name }: { name: Feature['icon'] }) {
+  const Icon = FEATURE_ICONS[name];
   return (
     <span className={styles.featureIcon} aria-hidden='true'>
-      <svg
-        width='22'
-        height='22'
-        viewBox='0 0 24 24'
-        fill='none'
-        stroke='currentColor'
-        strokeWidth='1'
-        strokeLinecap='round'
-        strokeLinejoin='round'
-        focusable='false'
-      >
-        {paths[name]}
-      </svg>
+      <Icon size={22} strokeWidth={1.25} aria-hidden='true' focusable={false} />
     </span>
   );
 }

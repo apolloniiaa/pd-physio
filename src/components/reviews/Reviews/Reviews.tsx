@@ -1,5 +1,5 @@
 import { Cormorant_Garamond } from 'next/font/google';
-import { ReviewCardItem, ReviewGrid } from './ReviewCards';
+import { ReviewTimeline } from './ReviewCards';
 import styles from './Reviews.module.scss';
 
 // Editorial serif for the heading and rating (scoped to this component, so
@@ -96,9 +96,6 @@ export default function Reviews() {
             <h1 id='reviews-title' className={styles.title}>
               Amit pácienseim mondanak.
             </h1>
-            <p className={styles.lead}>
-              Valódi visszajelzések a Petró Dániellel végzett közös munkáról.
-            </p>
           </div>
 
           <div className={styles.rating}>
@@ -111,30 +108,29 @@ export default function Reviews() {
           </div>
         </header>
 
-        <ReviewGrid>
-          {REVIEWS.map((review, index) => (
-            <ReviewCardItem key={review.name}>
-              <figure className={styles.card}>
-                <div className={styles.cardTop}>
-                  <Stars count={review.rating} />
-                  <span className={styles.date}>{review.date}</span>
-                </div>
+        {/* Vertical scroll-driven timeline: 01 left, 02 right, … on desktop. */}
+        <ReviewTimeline
+          items={REVIEWS.map((review, index) => (
+            <figure key={review.name} className={styles.card}>
+              <div className={styles.cardTop}>
+                <Stars count={review.rating} />
+                <span className={styles.date}>{review.date}</span>
+              </div>
 
-                <blockquote className={styles.quote}>
-                  <p>{review.text}</p>
-                </blockquote>
+              <blockquote className={styles.quote}>
+                <p>{review.text}</p>
+              </blockquote>
 
-                <figcaption className={styles.author}>
-                  <span className={styles.index}>{String(index + 1).padStart(2, '0')}</span>
-                  <span className={styles.authorText}>
-                    <span className={styles.name}>{review.name}</span>
-                    <span className={styles.attribution}>Google · Petró Dániel</span>
-                  </span>
-                </figcaption>
-              </figure>
-            </ReviewCardItem>
+              <figcaption className={styles.author}>
+                <span className={styles.index}>{String(index + 1).padStart(2, '0')}</span>
+                <span className={styles.authorText}>
+                  <span className={styles.name}>{review.name}</span>
+                  <span className={styles.attribution}>Google · Petró Dániel</span>
+                </span>
+              </figcaption>
+            </figure>
           ))}
-        </ReviewGrid>
+        />
 
         {GOOGLE_REVIEWS_URL && (
           <div className={styles.ctaWrap}>

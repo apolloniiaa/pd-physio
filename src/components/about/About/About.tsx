@@ -5,6 +5,17 @@ import styles from './About.module.scss';
 export default function About() {
   return (
     <section id='about' className={styles.about} aria-labelledby='about-title'>
+      {/* Static background arcs (decorative): only portions are visible. */}
+      <svg
+        className={styles.arcs}
+        viewBox='0 0 1440 900'
+        preserveAspectRatio='xMidYMid slice'
+        aria-hidden='true'
+        focusable='false'
+      >
+        <circle className={styles.arcMain} cx='-300' cy='1100' r='1000' />
+        <ellipse className={styles.arcSoft} cx='-120' cy='1180' rx='1080' ry='640' />
+      </svg>
       <AboutBackdrop />
       <div className={styles.inner}>
         <div className={styles.media}>
@@ -13,13 +24,12 @@ export default function About() {
             alt='Gyógytornász kezelés közben a kezelőágy mellett'
             fill
             priority
-            sizes='(min-width: 560px) 483px, 100vw'
+            sizes='(min-width: 1600px) 505px, (min-width: 560px) 483px, 100vw'
             className={styles.image}
           />
         </div>
 
         <div className={styles.content}>
-          <p className={styles.eyebrow}>Rólam</p>
           <h1 id='about-title' className={styles.title}>
             Hiszek a tudatos és tartós változásban.
           </h1>

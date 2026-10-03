@@ -105,13 +105,21 @@
   text-decoration: none;
   text-transform: uppercase;
   white-space: nowrap;
+  // Same hover as the Home "IDŐPONTFOGLALÁS" button: same blue, a touch
+  // brighter, 1px lift, soft blue glow, arrow nudge.
   transition:
-    background-color 300ms $ease-editorial,
-    border-color 300ms $ease-editorial;
+    transform 400ms $ease-editorial,
+    box-shadow 400ms $ease-editorial,
+    filter 400ms $ease-editorial;
 
   &:hover {
-    border-color: $color-electric-hover;
-    background-color: $color-electric-hover;
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 28px -12px rgba($color-electric, 0.7);
+
+    .ctaArrow {
+      transform: translateX(4px);
+    }
   }
 
   &:focus-visible {
@@ -122,6 +130,7 @@
 
 .ctaArrow {
   flex-shrink: 0;
+  transition: transform 400ms $ease-editorial;
 }
 
 // ---------- Columns ----------
@@ -140,8 +149,7 @@
 }
 
 // Generous touch targets (≥ 44px rows).
-.navLink,
-.detailLink {
+.navLink {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -164,26 +172,64 @@
   letter-spacing: 0.1em;
 }
 
-.detailLink {
+// ---------- Contact column ----------
+// Filled booking-blue discs (same blue and same hover as the Home
+// "IDŐPONTFOGLALÁS" button) with bone-white Lucide icons.
+
+.iconLink {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid $color-electric;
+  border-radius: 50%;
+  background-color: $color-electric;
   color: $color-bone;
-  font-size: $font-size-md;
-  overflow-wrap: anywhere;
+
+  svg {
+    display: block;
+  }
 }
 
-.address {
+// Five icon-only links in one row (never wraps).
+.iconRow {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding-top: 10px;
-  color: $color-cool-gray;
-  font-size: $font-size-sm;
-  font-style: normal;
-  line-height: 1.6;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 12px;
+  list-style: none;
+
+  > li {
+    display: flex;
+  }
+}
+
+.iconLink {
+  // Same hover as the Home booking button: a touch brighter, 1px lift,
+  // soft blue glow.
+  transition:
+    transform 400ms $ease-editorial,
+    box-shadow 400ms $ease-editorial,
+    filter 400ms $ease-editorial;
+
+  &:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 28px -12px rgba($color-electric, 0.7);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-bone;
+    outline-offset: 3px;
+  }
 }
 
 // ---------- Bottom bar ----------
 
 .bottom {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -202,10 +248,34 @@
   }
 }
 
+// Understated studio credit (right side of the bottom bar).
+.credit {
+  color: rgba($color-cool-gray, 0.6);
+}
+
+// Small electric-blue dot resting on the bottom divider (decorative).
+.bottom::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: $color-electric;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .iconLink,
   .cta,
-  .navLink,
-  .detailLink {
+  .ctaArrow,
+  .navLink {
     transition: none;
+  }
+
+  .cta:hover,
+  .cta:hover .ctaArrow,
+  .iconLink:hover {
+    transform: none;
   }
 }

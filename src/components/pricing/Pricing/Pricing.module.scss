@@ -3,7 +3,7 @@
 @use '../../../styles/mixins' as *;
 @use '../../../styles/typography' as *;
 
-// Pricing page — dark editorial background with static line work and
+// Pricing page — atmospheric blue/navy background with static line work and
 // smoked-glass price cards. Same palette and type system as the other pages.
 
 $pricing-serif: var(--font-pricing-serif), 'Cormorant Garamond', Georgia, serif;
@@ -11,6 +11,13 @@ $pricing-serif: var(--font-pricing-serif), 'Cormorant Garamond', Georgia, serif;
 // Navbar + Pricing fill at least the first viewport (svh with vh fallback).
 $pricing-fill-fallback: calc(100vh - #{$header-height});
 $pricing-fill: calc(100svh - #{$header-height});
+
+// Shared atmospheric palette (same on Árlista, Rólam and Kapcsolat):
+// pale daylight blue, a paler mist, and a muted midnight blue used to lift
+// the dark base (#0B1230 mixed ~20% toward #A1C4FD).
+$atmo-sky: #a1c4fd;
+$atmo-mist: #c2e9fb;
+$atmo-lift: #29365a;
 
 .pricing {
   position: relative;
@@ -21,11 +28,28 @@ $pricing-fill: calc(100svh - #{$header-height});
   min-height: $pricing-fill;
   padding-block: $spacing-3xl $spacing-4xl;
   overflow: hidden;
-  // Void base with soft navy depth (gives the glass something to blur).
+  // Atmospheric background in the Rólam family (same layering and
+  // strengths): diffused light behind the card grid — faint bone core,
+  // #C2E9FB mist, wider #A1C4FD glow, deeper #315BFF falloff — fading into
+  // deep navy and near-black at the edges. The dark cards read against it.
   background:
-    radial-gradient(ellipse 60% 55% at 78% 70%, rgba($color-navy-deep, 0.95), transparent 72%),
-    radial-gradient(ellipse 45% 50% at 8% 12%, rgba($color-navy, 0.9), transparent 70%),
-    $color-void;
+    radial-gradient(ellipse 26% 26% at 60% 55%, rgba($color-bone, 0.1) 0%, rgba($color-bone, 0.04) 45%, transparent 80%),
+    radial-gradient(ellipse 42% 46% at 59% 56%, rgba($atmo-mist, 0.18) 0%, rgba($atmo-mist, 0.07) 50%, transparent 85%),
+    radial-gradient(ellipse 72% 78% at 58% 57%, rgba($atmo-sky, 0.3) 0%, rgba($atmo-sky, 0.14) 38%, rgba($atmo-sky, 0.05) 64%, transparent 90%),
+    radial-gradient(ellipse 90% 100% at 55% 60%, rgba($color-electric, 0.13) 0%, rgba($color-electric, 0.05) 45%, transparent 78%),
+    radial-gradient(ellipse 130% 115% at 58% 56%, transparent 48%, rgba($color-void, 0.65) 100%),
+    linear-gradient(180deg, $color-void 0%, $color-navy 14%, $color-navy-deep 40%, $color-navy-deep 70%, $color-navy 88%, $color-void 100%);
+
+  // Very fine grain over the gradient to prevent visible banding.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    pointer-events: none;
+  }
 
   @include respond-to($bp-lg) {
     padding-block: $spacing-4xl;
@@ -74,25 +98,13 @@ $pricing-fill: calc(100svh - #{$header-height});
   }
 }
 
-.eyebrow {
-  color: $color-header-cta;
-  font-size: $font-size-sm;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
 .title {
-  margin-top: $spacing-md;
   color: $color-bone;
   font-family: $pricing-serif;
   font-size: clamp(52px, 6vw + 1rem, 88px);
   font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1;
-
-  @include respond-to($bp-lg) {
-    margin-top: 20px;
-  }
 }
 
 .grid {

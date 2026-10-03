@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { IBM_Plex_Mono, IBM_Plex_Sans, Space_Grotesk } from 'next/font/google';
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
+import ScrollTopOnReload from '@/components/ScrollTopOnReload/ScrollTopOnReload';
 import './globals.scss';
 
 // Project typography. Consumed through the $font-* tokens in
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       className={`${fontSans.variable} ${fontDisplay.variable} ${fontMono.variable}`}
     >
       <body>
+        <ScrollTopOnReload />
         <Header />
         {children}
         <Footer />

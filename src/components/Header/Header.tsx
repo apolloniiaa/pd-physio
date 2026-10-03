@@ -26,7 +26,7 @@ type NavItem = {
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { label: 'HOME', href: '/' },
+  { label: 'FŐOLDAL', href: '/' },
   { label: 'RÓLAM', href: '/#about' },
   { label: 'SZOLGÁLTATÁSOK', href: '/#services' },
   { label: 'ÁRLISTA', href: '/#pricing' },
