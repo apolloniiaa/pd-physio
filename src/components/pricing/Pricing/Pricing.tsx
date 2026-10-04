@@ -1,4 +1,7 @@
+import Link from 'next/link';
 import { Cormorant_Garamond } from 'next/font/google';
+import PageNote from '@/components/PageNote/PageNote';
+import { PRICES } from '@/data/pricing';
 import AboutBackdrop from '@/components/about/About/AboutBackdrop';
 import { PricingCardItem, PricingGrid } from './PricingCards';
 import styles from './Pricing.module.scss';
@@ -11,22 +14,6 @@ const editorialSerif = Cormorant_Garamond({
   weight: ['500'],
   display: 'swap',
 });
-
-type PriceItem = {
-  number: string;
-  title: string;
-  duration: string;
-  amount: string;
-  currency: string;
-};
-
-// Content from the Figma "Árlista" frame — edit prices here.
-const PRICES: PriceItem[] = [
-  { number: '01', title: 'Állapotfelmérés', duration: '55 perc', amount: '20.000', currency: 'Ft' },
-  { number: '02', title: 'Gyógytorna, manuálterápia', duration: '55 perc', amount: '18.000', currency: 'Ft' },
-  { number: '03', title: '6 alkalmas bérlet', duration: '55 perc', amount: '102.000', currency: 'Ft' },
-  { number: '04', title: '10 alkalmas bérlet', duration: '55 perc', amount: '165.000', currency: 'Ft' },
-];
 
 function ClockIcon() {
   return (
@@ -49,7 +36,16 @@ function ClockIcon() {
   );
 }
 
-export default function Pricing() {
+type PricingProps = {
+  /** 1 on the stand-alone /pricing page, 2 inside the Home one-pager. */
+  level?: 1 | 2;
+};
+
+export default function Pricing({ level = 1 }: PricingProps) {
+  const Heading = level === 1 ? 'h1' : 'h2';
+  const Sub = level === 1 ? 'h2' : 'h3';
+  const isPage = level === 1;
+
   return (
     <section
       id='pricing'
@@ -73,9 +69,12 @@ export default function Pricing() {
 
       <div className={styles.inner}>
         <header className={styles.intro}>
-          <h1 id='pricing-title' className={styles.title}>
+          <Heading id='pricing-title' className={styles.title}>
+            {isPage && (
+              <span className={styles.eyebrow}>Gyógytorna és manuálterápia{' '}</span>
+            )}
             Árlista
-          </h1>
+          </Heading>
         </header>
 
         <PricingGrid>
@@ -87,7 +86,7 @@ export default function Pricing() {
                   <span className={styles.rule} aria-hidden='true' />
                 </div>
 
-                <h2 className={styles.cardTitle}>{item.title}</h2>
+                <Sub className={styles.cardTitle}>{item.title}</Sub>
 
                 <p className={styles.duration}>
                   <ClockIcon />
@@ -103,6 +102,14 @@ export default function Pricing() {
             </PricingCardItem>
           ))}
         </PricingGrid>
+
+        {isPage && (
+          <PageNote className={styles.note}>
+            Minden kezelés 55 perces. <Link href='/booking'>Foglalj időpontot online</Link>{' '}
+            gyógytornára vagy manuálterápiára, vagy olvass arról,{' '}
+            <Link href='/gyogytorna'>hogyan zajlik a gyógytorna</Link>.
+          </PageNote>
+        )}
       </div>
     </section>
   );

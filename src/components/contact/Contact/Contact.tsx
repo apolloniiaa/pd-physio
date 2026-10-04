@@ -1,4 +1,7 @@
+import Link from 'next/link';
 import { Cormorant_Garamond } from 'next/font/google';
+import BookingButton from '@/components/BookingButton/BookingButton';
+import PageNote from '@/components/PageNote/PageNote';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import AboutBackdrop from '@/components/about/About/AboutBackdrop';
 import styles from './Contact.module.scss';
@@ -31,7 +34,15 @@ const MAP_QUERY = 'Budapest, Vágóhíd utca 12-18, 1097';
 const MAP_EMBED = `https://www.google.com/maps?q=${encodeURIComponent(MAP_QUERY)}&z=16&output=embed`;
 const MAP_LINK = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(MAP_QUERY)}`;
 
-export default function Contact() {
+type ContactProps = {
+  /** 1 on the stand-alone /contact page, 2 inside the Home one-pager. */
+  level?: 1 | 2;
+};
+
+export default function Contact({ level = 1 }: ContactProps) {
+  const Heading = level === 1 ? 'h1' : 'h2';
+  const isPage = level === 1;
+
   return (
     <section
       id='contact'
@@ -58,9 +69,14 @@ export default function Contact() {
 
       <div className={styles.inner}>
         <div className={styles.info}>
-          <h1 id='contact-title' className={styles.title}>
+          <Heading id='contact-title' className={styles.title}>
+            {isPage && (
+              <span className={styles.eyebrow}>
+                Kapcsolat · Budapest IX. kerület
+              {' '}</span>
+            )}
             Keress bizalommal.
-          </h1>
+          </Heading>
           <p className={styles.lead}>
             Amennyiben kérdése merül fel, időpontot szeretne egyeztetni, vagy
             további információra van szüksége, állok rendelkezésére.
@@ -103,13 +119,23 @@ export default function Contact() {
               </span>
             </li>
           </ul>
+
+          <BookingButton className={styles.cta} />
+
+          {isPage && (
+            <PageNote>
+              A rendelő Budapest IX. kerületében, Ferencvárosban, a Vágóhíd
+              utcában található. Időpontot{' '}
+              <Link href='/booking'>online is foglalhatsz</Link>.
+            </PageNote>
+          )}
         </div>
 
         <div className={styles.mapBlock}>
           <div className={styles.map}>
             <iframe
               src={MAP_EMBED}
-              title='Térkép: Budapest, 1097. Vágóhíd utca 12–18.'
+              title='Térkép: a rendelő helye – 1097 Budapest, Vágóhíd utca 12–18.'
               loading='lazy'
               referrerPolicy='no-referrer-when-downgrade'
               className={styles.mapFrame}

@@ -1,0 +1,212 @@
+@use 'sass:map';
+@use '../../styles/variables' as *;
+@use '../../styles/breakpoints' as *;
+
+// ========================================
+// Initial page-load entrance (see PageIntro.tsx)
+// Sibling selectors target the navbar (<header>) and the first block of
+// <main>, which works for every page: Home (#home hero), Rólam,
+// Szolgáltatások, Árlista, Visszajelzések, Kapcsolat and Időpontfoglalás.
+// Only opacity and transform animate (no layout shift); nothing blocks input.
+// The Booking page's text block has its own on-mount reveal, so only its
+// illustration is handled here — otherwise that reveal would restart when
+// these animations end and the text would fade in twice.
+// ========================================
+
+$intro-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+// Desktop ≈ 1.1–1.2 s overall; phones shorter and lighter.
+$intro-desktop: (
+  veil: 800ms,
+  head-delay: 100ms,
+  head: 700ms,
+  image: 1100ms,
+  title-delay: 220ms,
+  text-delay: 320ms,
+  cta-delay: 420ms,
+  text: 780ms,
+  rise: 24px,
+  scale: 1.03,
+);
+
+$intro-mobile: (
+  veil: 560ms,
+  head-delay: 60ms,
+  head: 520ms,
+  image: 800ms,
+  title-delay: 140ms,
+  text-delay: 200ms,
+  cta-delay: 260ms,
+  text: 560ms,
+  rise: 14px,
+  scale: 1.02,
+);
+
+$intro-active: '.intro:not([data-done])';
+
+// Client-side route change: the same rise / settle, lighter and quicker,
+// for the destination page's first section only (no veil, no navbar).
+$route-desktop: (
+  image: 900ms,
+  title-delay: 60ms,
+  text-delay: 140ms,
+  cta-delay: 220ms,
+  text: 680ms,
+  rise: 16px,
+  scale: 1.02,
+);
+
+$route-mobile: (
+  image: 700ms,
+  title-delay: 40ms,
+  text-delay: 90ms,
+  cta-delay: 140ms,
+  text: 520ms,
+  rise: 10px,
+  scale: 1.015,
+);
+
+$route-active: '.intro[data-route]';
+
+@mixin route-sequence($t) {
+  #{$route-active} ~ :global(main > #home:first-child img),
+  #{$route-active} ~ :global(main > #about:first-child img),
+  #{$route-active} ~ :global(main > :first-child #booking img) {
+    --intro-scale: #{map.get($t, scale)};
+    animation: intro-settle map.get($t, image) $intro-ease 0ms both;
+  }
+
+  #{$route-active} ~ :global(main > :first-child:not(:has(#booking)) h1) {
+    --intro-rise: #{map.get($t, rise)};
+    animation: intro-rise map.get($t, text) $intro-ease map.get($t, title-delay) both;
+  }
+
+  #{$route-active} ~ :global(main > :first-child:not(:has(#booking)) p) {
+    --intro-rise: #{map.get($t, rise)};
+    animation: intro-rise map.get($t, text) $intro-ease map.get($t, text-delay) both;
+  }
+
+  #{$route-active} ~ :global(main > :first-child:not(:has(#booking)) a[href='/booking']) {
+    --intro-rise: #{map.get($t, rise)};
+    animation: intro-rise map.get($t, text) $intro-ease map.get($t, cta-delay) both;
+  }
+}
+
+@mixin intro-sequence($t) {
+  .intro {
+    animation: intro-veil map.get($t, veil) $intro-ease 40ms both;
+  }
+
+  // 2. Navbar
+  #{$intro-active} ~ :global(header) {
+    animation: intro-drop map.get($t, head) $intro-ease map.get($t, head-delay) both;
+  }
+
+  // 3a. Large imagery of the first section (Home hero, Rólam portrait,
+  //     Időpontfoglalás photo): a slow settle from a hair larger.
+  #{$intro-active} ~ :global(main > #home:first-child img),
+  #{$intro-active} ~ :global(main > #about:first-child img),
+  #{$intro-active} ~ :global(main > :first-child #booking img) {
+    --intro-scale: #{map.get($t, scale)};
+    animation: intro-settle map.get($t, image) $intro-ease 0ms both;
+  }
+
+  // 3b. Main heading
+  #{$intro-active} ~ :global(main > :first-child:not(:has(#booking)) h1) {
+    --intro-rise: #{map.get($t, rise)};
+    animation: intro-rise map.get($t, text) $intro-ease map.get($t, title-delay) both;
+  }
+
+  // 3c. Supporting text (eyebrow, lead / body paragraphs)
+  #{$intro-active} ~ :global(main > :first-child:not(:has(#booking)) p) {
+    --intro-rise: #{map.get($t, rise)};
+    animation: intro-rise map.get($t, text) $intro-ease map.get($t, text-delay) both;
+  }
+
+  // 3d. Booking CTA arrives last
+  #{$intro-active} ~ :global(main > :first-child:not(:has(#booking)) a[href='/booking']) {
+    --intro-rise: #{map.get($t, rise)};
+    animation: intro-rise map.get($t, text) $intro-ease map.get($t, cta-delay) both;
+  }
+}
+
+// 1. Dark navy veil over the page, fading away.
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background-color: $color-void;
+  pointer-events: none;
+
+  &[data-done] {
+    display: none;
+  }
+}
+
+// Only when motion is allowed; with reduced motion nothing animates.
+@media (prefers-reduced-motion: no-preference) {
+  @include intro-sequence($intro-desktop);
+}
+
+@media (prefers-reduced-motion: no-preference) and (max-width: #{$bp-md - 1px}) {
+  @include intro-sequence($intro-mobile);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @include route-sequence($route-desktop);
+}
+
+@media (prefers-reduced-motion: no-preference) and (max-width: #{$bp-md - 1px}) {
+  @include route-sequence($route-mobile);
+}
+
+@keyframes intro-veil {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes intro-drop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes intro-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--intro-rise), 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes intro-settle {
+  from {
+    transform: scale(var(--intro-scale));
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+// Reduced motion: no veil and no movement — content is shown immediately.
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    display: none;
+  }
+}

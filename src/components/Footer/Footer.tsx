@@ -2,7 +2,6 @@ import Link from 'next/link';
 import {
   createLucideIcon,
   Mail,
-  MapPin,
   Phone,
   type LucideIcon,
 } from 'lucide-react';
@@ -13,19 +12,20 @@ type FooterLink = {
   href: `/${string}`;
 };
 
+// Stand-alone pages (crawlable on every route; the navbar keeps the Home
+// one-page anchors).
 const PAGES: FooterLink[] = [
-  { label: 'RÓLAM', href: '/#about' },
-  { label: 'SZOLGÁLTATÁSOK', href: '/#services' },
-  { label: 'ÁRLISTA', href: '/#pricing' },
-  { label: 'VISSZAJELZÉSEK', href: '/#reviews' },
-  { label: 'KAPCSOLAT', href: '/#contact' },
+  { label: 'RÓLAM', href: '/about' },
+  { label: 'SZOLGÁLTATÁSOK', href: '/services' },
+  { label: 'ÁRLISTA', href: '/pricing' },
+  { label: 'VISSZAJELZÉSEK', href: '/reviews' },
+  { label: 'KAPCSOLAT', href: '/contact' },
 ];
 
 const CONTACT = {
   phone: '+36 20 234 0340',
   phoneHref: 'tel:+36202340340',
   email: 'petrodaniel.manual@gmail.com',
-  addressLines: ['Budapest, 1097. Vágóhíd utca 12–18.', '8. épület, 1. emelet'],
 };
 
 // Lucide icon settings shared by every contact icon (same as Contact page).
@@ -49,24 +49,13 @@ const Facebook = createLucideIcon('facebook', [
   ['path', { d: 'M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z', key: 'fb' }],
 ]);
 
-// Same Google Maps destination as the Contact page link.
-const MAP_LINK = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-  'Budapest, Vágóhíd utca 12-18, 1097',
-)}`;
-
-// Icon-only row: Location → Instagram → Facebook → Email → Phone.
+// Icon-only row: Instagram → Facebook → Email → Phone.
 const ICON_LINKS: {
   label: string;
   href: string;
   Icon: LucideIcon;
   external?: boolean;
 }[] = [
-  {
-    label: `Térkép: ${CONTACT.addressLines.join(', ')} (új lapon nyílik meg)`,
-    href: MAP_LINK,
-    Icon: MapPin,
-    external: true,
-  },
   {
     label: 'Instagram (új lapon nyílik meg)',
     href: 'https://www.instagram.com/petrodaniel_/?hl=hu',
@@ -91,28 +80,6 @@ const ICON_LINKS: {
   },
 ];
 
-function ArrowIcon() {
-  return (
-    <svg
-      className={styles.ctaArrow}
-      width='16'
-      height='10'
-      viewBox='0 0 16 10'
-      fill='none'
-      aria-hidden='true'
-      focusable='false'
-    >
-      <path
-        d='M0 5h15M10.5.75 15 5l-4.5 4.25'
-        stroke='currentColor'
-        strokeWidth='1.2'
-        strokeLinecap='round'
-        strokeLinejoin='round'
-      />
-    </svg>
-  );
-}
-
 // Global footer — rendered once in the root layout, closes every page.
 // Full-width background; content sits in the centred .inner container.
 export default function Footer() {
@@ -126,17 +93,37 @@ export default function Footer() {
         aria-hidden='true'
         focusable='false'
       >
-        <circle className={styles.lineMain} cx='1320' cy='-40' r='560' />
-        <circle className={styles.lineSoft} cx='1320' cy='-40' r='700' />
+        {/* Two quiet arcs: one sweeping around the brand mark, one from the
+            top-right corner — they frame the content rather than cross it. */}
+        <circle className={styles.lineMain} cx='-120' cy='860' r='620' />
+        <circle className={styles.lineSoft} cx='1480' cy='-80' r='520' />
       </svg>
 
       <div className={styles.inner}>
         <div className={styles.grid}>
-          <div className={styles.intro}>
-            <Link href='/booking' className={styles.cta}>
-              <span>IDŐPONTFOGLALÁS</span>
-              <ArrowIcon />
+          {/* Brand: the PD monogram, painted in the site blues through the
+              logo PNG used as an alpha mask (see .mark). */}
+          <div className={styles.brand}>
+            <Link
+              href='/'
+              className={styles.brandLink}
+              aria-label='PD Physio Studio – főoldal'
+            >
+              <span className={styles.mark} aria-hidden='true' />
             </Link>
+
+            {/* Practitioner + practice address (consistent NAP on every page). */}
+            <p className={styles.identity}>
+              Petró Dániel
+              <span className={styles.identityRole}>
+                Gyógytornász-manuálterapeuta
+              </span>
+            </p>
+            <address className={styles.address}>
+              1097 Budapest, Vágóhíd utca 12–18.
+              <br />
+              8. épület, 1. emelet
+            </address>
           </div>
 
           <nav className={styles.column} aria-labelledby='footer-pages'>
@@ -155,7 +142,7 @@ export default function Footer() {
           </nav>
 
           {/* Contact column: one row of icon-only links (no visible text). */}
-          <div className={styles.column}>
+          <div className={`${styles.column} ${styles.social}`}>
             <ul className={styles.iconRow}>
               {ICON_LINKS.map(({ label, href, Icon, external }) => (
                 <li key={href}>
@@ -176,7 +163,7 @@ export default function Footer() {
         </div>
 
         <div className={styles.bottom}>
-          <p>© 2026 PD Physio</p>
+          <p>© 2026 Petró Dániel Physio. Minden jog fenntartva</p>
           <p className={styles.credit}>Crafted by DIV.Studio</p>
         </div>
       </div>

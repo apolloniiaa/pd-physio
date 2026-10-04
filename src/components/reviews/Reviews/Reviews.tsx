@@ -1,4 +1,6 @@
+import Link from 'next/link';
 import { Cormorant_Garamond } from 'next/font/google';
+import PageNote from '@/components/PageNote/PageNote';
 import { ReviewTimeline } from './ReviewCards';
 import styles from './Reviews.module.scss';
 
@@ -69,7 +71,15 @@ function Stars({ count, className }: { count: number; className?: string }) {
   );
 }
 
-export default function Reviews() {
+type ReviewsProps = {
+  /** 1 on the stand-alone /reviews page, 2 inside the Home one-pager. */
+  level?: 1 | 2;
+};
+
+export default function Reviews({ level = 1 }: ReviewsProps) {
+  const Heading = level === 1 ? 'h1' : 'h2';
+  const isPage = level === 1;
+
   return (
     <section
       id='reviews'
@@ -93,9 +103,9 @@ export default function Reviews() {
         <header className={styles.head}>
           <div className={styles.intro}>
             <p className={styles.eyebrow}>Visszajelzések</p>
-            <h1 id='reviews-title' className={styles.title}>
+            <Heading id='reviews-title' className={styles.title}>
               Amit pácienseim mondanak.
-            </h1>
+            </Heading>
           </div>
 
           <div className={styles.rating}>
@@ -147,6 +157,14 @@ export default function Reviews() {
               <span className={styles.srOnly}>(új lapon nyílik meg)</span>
             </a>
           </div>
+        )}
+
+        {isPage && (
+          <PageNote className={styles.note}>
+            Ha te is szeretnél segítséget kérni,{' '}
+            <Link href='/booking'>foglalj időpontot online</Link>, vagy nézd
+            meg, <Link href='/services'>milyen kezelésekkel dolgozom</Link>.
+          </PageNote>
         )}
       </div>
     </section>

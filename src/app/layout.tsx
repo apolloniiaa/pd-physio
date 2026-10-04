@@ -1,8 +1,19 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { IBM_Plex_Mono, IBM_Plex_Sans, Space_Grotesk } from 'next/font/google';
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
+import JsonLd from '@/components/JsonLd/JsonLd';
+import PageIntro from '@/components/PageIntro/PageIntro';
 import ScrollTopOnReload from '@/components/ScrollTopOnReload/ScrollTopOnReload';
+import { siteGraph } from '@/lib/structuredData';
+import {
+  IS_INDEXABLE,
+  OG_IMAGE,
+  PRACTITIONER,
+  SITE_LOCALE,
+  SITE_NAME,
+  SITE_URL,
+} from '@/lib/site';
 import './globals.scss';
 
 // Project typography. Consumed through the $font-* tokens in
@@ -28,10 +39,56 @@ const fontMono = IBM_Plex_Mono({
   preload: false,
 });
 
+// Site-wide defaults. Every route sets its own title, description, canonical
+// URL and Open Graph data through createMetadata() (src/lib/seo.ts).
+// Icons come from the file conventions in src/app (favicon.ico, icon.png,
+// apple-icon.png) and the web manifest from src/app/manifest.ts.
+const DEFAULT_TITLE = 'Gyógytorna és Manuálterápia Budapest | Petró Dániel';
+const DEFAULT_DESCRIPTION =
+  'Gyógytorna és manuálterápia Budapesten, Petró Dániel gyógytornász-manuálterapeutával. Személyre szabott kezelések fájdalomcsökkentéshez, rehabilitációhoz és tudatosabb mozgáshoz.';
+
 export const metadata: Metadata = {
-  title: 'PD Physio Studio — Személyre szabott gyógytorna & manuálterápia',
-  description:
-    'Személyre szabott gyógytorna és manuálterápia. Időpontfoglalás a PD Physio Studio rendelésére.',
+  metadataBase: new URL(SITE_URL),
+  title: DEFAULT_TITLE,
+  description: DEFAULT_DESCRIPTION,
+  applicationName: SITE_NAME,
+  authors: [{ name: PRACTITIONER.name }],
+  creator: PRACTITIONER.name,
+  publisher: SITE_NAME,
+  category: 'health',
+  formatDetection: { telephone: false, email: false, address: false },
+  robots: IS_INDEXABLE
+    ? {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          'max-image-preview': 'large',
+          'max-snippet': -1,
+          'max-video-preview': -1,
+        },
+      }
+    : { index: false, follow: false },
+  openGraph: {
+    type: 'website',
+    locale: SITE_LOCALE,
+    siteName: SITE_NAME,
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: [{ url: OG_IMAGE.url, alt: OG_IMAGE.alt }],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#05060a',
+  colorScheme: 'dark',
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
@@ -41,7 +98,10 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       className={`${fontSans.variable} ${fontDisplay.variable} ${fontMono.variable}`}
     >
       <body>
+        {/* Practice + practitioner + website entities (schema.org). */}
+        <JsonLd data={siteGraph()} />
         <ScrollTopOnReload />
+        <PageIntro />
         <Header />
         {children}
         <Footer />

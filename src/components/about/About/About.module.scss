@@ -1,3 +1,4 @@
+@use 'sass:string';
 @use '../../../styles/variables' as *;
 @use '../../../styles/breakpoints' as *;
 @use '../../../styles/mixins' as *;
@@ -7,12 +8,16 @@
 // image 483 × 516 at x=106, 146px gap, text column from x=735 (≈615 wide).
 // Only the palette is translated to the Home black / navy / electric-blue system.
 
-$about-image-width: 483px;
+// Portrait frame: narrower and taller than the Figma 483 × 516 crop, so the
+// lower part of the photo (arms) stays in view.
+$about-image-width: 455px;
+$about-image-ratio: string.unquote('455 / 560');
 $about-gap: 146px;
 $about-text-width: 615px;
-// Large desktops only (≥ 1600px): a slightly narrower, taller portrait
-// (shows more of the arms), a wider text column and larger type.
-$about-image-width-xl: 505px;
+// Large desktops only (≥ 1600px): a slightly larger, equally tall-cropped
+// portrait, a wider text column and larger type.
+$about-image-width-xl: 480px;
+$about-image-ratio-xl: string.unquote('4 / 5');
 $about-text-width-xl: 700px;
 $about-xl: 1600px;
 
@@ -263,7 +268,7 @@ $atmo-lift: #29365a;
   position: relative;
   width: min(100% - 16px, #{$about-image-width});
   margin-left: 16px;
-  aspect-ratio: 483 / 516;
+  aspect-ratio: $about-image-ratio;
 
   // Figma offset block behind the photo's top-left corner (navy / electric blue).
   &::before {
@@ -281,9 +286,9 @@ $atmo-lift: #29365a;
     margin-left: 0;
   }
 
-  // Large desktops: slightly narrower and taller crop (more of the arms).
+  // Large desktops: same tall crop, slightly larger.
   @media (min-width: $about-xl) {
-    aspect-ratio: 505 / 585;
+    aspect-ratio: $about-image-ratio-xl;
   }
 }
 
@@ -291,7 +296,8 @@ $atmo-lift: #29365a;
   z-index: 1;
   border-radius: $radius-sm;
   object-fit: cover;
-  // Portrait photo in a near-square frame: anchor near the top so the head stays in view.
+  // Tall frame close to the photo's own ratio: anchored near the top so the
+  // head stays in view while the arms are no longer cropped.
   object-position: 50% 8%;
 }
 
@@ -381,4 +387,18 @@ $atmo-lift: #29365a;
   stroke: rgba($atmo-mist, 0.09);
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
+}
+
+// Topic line inside the page H1 (stand-alone page only): same small
+// uppercase style as the Booking / Reviews eyebrows.
+.eyebrow {
+  display: block;
+  margin-bottom: $spacing-md;
+  color: $color-header-cta;
+  font-family: $font-sans;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-regular;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
 }

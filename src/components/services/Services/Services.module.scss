@@ -241,3 +241,81 @@ $card-text: #c9ceda; // same supporting-copy grey as the Hero body
     transition: none;
   }
 }
+
+// Topic line inside the page H1 (stand-alone page only): same small
+// uppercase style as the Booking / Reviews eyebrows.
+.eyebrow {
+  display: block;
+  margin-bottom: $spacing-md;
+  color: $color-header-cta;
+  font-family: $font-sans;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-regular;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+// ---------- Patient-information links (under the grid) ----------
+
+.topics {
+  display: grid;
+  gap: $spacing-md;
+  margin-top: $spacing-2xl;
+  padding-top: $spacing-xl;
+  border-top: 1px solid $card-border;
+
+  @include respond-to($bp-lg) {
+    grid-template-columns: 220px minmax(0, 1fr);
+    align-items: start;
+    column-gap: $spacing-2xl;
+  }
+}
+
+.topicsTitle {
+  padding-top: 10px;
+  color: $color-header-cta;
+  font-family: $font-mono;
+  font-size: 12px;
+  font-weight: $font-weight-regular;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.topicList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+}
+
+.topicLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 18px;
+  border: 1px solid $card-border;
+  border-radius: 999px;
+  color: $color-bone;
+  font-size: $font-size-sm;
+  letter-spacing: 0.02em;
+  transition:
+    border-color 400ms $ease-editorial,
+    color 400ms $ease-editorial;
+
+  &:hover {
+    border-color: $card-border-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-electric-bright;
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topicLink {
+    transition: none;
+  }
+}

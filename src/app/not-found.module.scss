@@ -1,0 +1,53 @@
+@use '../styles/variables' as *;
+@use '../styles/breakpoints' as *;
+@use '../styles/mixins' as *;
+@use '../styles/typography' as *;
+
+.notFound {
+  @include container;
+  min-height: calc(100svh - #{$header-height});
+  padding-block: $spacing-4xl;
+}
+
+.code {
+  color: $color-electric-bright;
+  font-family: $font-mono;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+}
+
+.title {
+  margin-top: $spacing-md;
+  color: $color-bone;
+  font-family: $font-display;
+  font-size: clamp(34px, 2.6vw + 1rem, 56px);
+  font-weight: $font-weight-regular;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+}
+
+.text {
+  max-width: 520px;
+  margin-top: $spacing-lg;
+  color: $color-cool-gray;
+  line-height: 1.7;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm $spacing-lg;
+  margin-top: $spacing-xl;
+  list-style: none;
+
+  a {
+    color: $color-bone;
+    text-decoration: underline;
+    text-decoration-color: rgba($color-electric-bright, 0.55);
+    text-underline-offset: 4px;
+
+    &:hover {
+      text-decoration-color: $color-bone;
+    }
+  }
+}

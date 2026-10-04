@@ -312,23 +312,23 @@ export default function Header() {
             <ul className={styles.navList}>
               {NAV_ITEMS.map((item) => (
                 <li key={item.href}>
-                  <a
+                  <Link
                     href={item.href}
                     className={`${styles.navLink} ${item.href === activeHref ? styles.navLinkActive : ''}`}
                     aria-current={item.href === activeHref ? 'true' : undefined}
                     onClick={item.href === '/' ? handleHomeClick : undefined}
                   >
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </nav>
 
-          <a href={BOOKING_ITEM.href} className={styles.cta}>
+          <Link href={BOOKING_ITEM.href} className={styles.cta}>
             <span className={styles.ctaLabel}>{BOOKING_ITEM.label}</span>
             <ArrowIcon />
-          </a>
+          </Link>
 
           <button
             ref={toggleRef}
@@ -387,28 +387,28 @@ export default function Header() {
               <motion.ul className={styles.mobileList} variants={listVariants}>
                 {NAV_ITEMS.map((item) => (
                   <motion.li key={item.href} variants={itemVariants}>
-                    <a
+                    <Link
                       href={item.href}
                       className={`${styles.mobileLink} ${item.href === activeHref ? styles.mobileLinkActive : ''}`}
                       aria-current={item.href === activeHref ? 'true' : undefined}
                       onClick={item.href === '/' ? handleHomeClick : closeMenu}
                     >
                       {item.label}
-                    </a>
+                    </Link>
                   </motion.li>
                 ))}
                 <motion.li
                   className={styles.mobileCtaItem}
                   variants={itemVariants}
                 >
-                  <a
+                  <Link
                     href={BOOKING_ITEM.href}
                     className={`${styles.mobileLink} ${styles.mobileCta}`}
                     onClick={closeMenu}
                   >
                     <span>{BOOKING_ITEM.label}</span>
                     <ArrowIcon />
-                  </a>
+                  </Link>
                 </motion.li>
               </motion.ul>
             </motion.nav>

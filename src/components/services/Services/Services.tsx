@@ -1,7 +1,10 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, type Variants } from 'motion/react';
+import PageNote from '@/components/PageNote/PageNote';
+import { TOPIC_LIST } from '@/data/topics';
 import styles from './Services.module.scss';
 
 type Service = {
@@ -14,6 +17,8 @@ type Service = {
    * Shown at 16:10 across the full card width (object-fit: cover).
    */
   image?: string;
+  /** Descriptive alt text: what the photo actually shows. */
+  alt?: string;
   /** Optional CSS object-position to fine-tune the crop, e.g. '50% 80%'. */
   imagePosition?: string;
 };
@@ -23,6 +28,7 @@ const SERVICES: Service[] = [
     number: '01',
     title: 'Manuálterápia',
     image: '/images/services/manualterapia.png',
+    alt: 'Manuálterápiás kezelés: a gyógytornász a kezelőágyon fekvő páciens törzsét mobilizálja',
     description:
       'Célzott manuális technikákkal segíti a mozgás beszűkülésének és a fájdalomnak a csökkentését.',
   },
@@ -30,6 +36,7 @@ const SERVICES: Service[] = [
     number: '02',
     title: 'Gyógytorna',
     image: '/images/services/gyogytorna.png',
+    alt: 'Páciens fitneszlabdára támaszkodva stabilizáló gyakorlatot végez',
     description:
       'Egyénre szabott gyakorlatokkal fejlesztjük a mozgás minőségét, az erőt és a stabilitást.',
   },
@@ -37,6 +44,7 @@ const SERVICES: Service[] = [
     number: '03',
     title: 'Fasciakezelés',
     image: '/images/services/fasciakezeles.png',
+    alt: 'A nyak és a koponyaalap kézi kezelése hanyatt fekvő páciensnél',
     description:
       'A kötőszöveti rendszer célzott kezelésével támogatjuk a szabadabb és harmonikusabb mozgást.',
   },
@@ -44,6 +52,7 @@ const SERVICES: Service[] = [
     number: '04',
     title: 'Tartáskorrekció',
     image: '/images/services/tartaskorrekcio.png',
+    alt: 'Hason fekvő páciens hátizom-aktiváló gyakorlata gyógytornászi irányítással',
     imagePosition: '50% 62%',
     description:
       'A testtartás és a mozgásminták tudatos fejlesztésével segítünk hosszú távú változást elérni.',
@@ -52,6 +61,7 @@ const SERVICES: Service[] = [
     number: '05',
     title: 'Rehabilitáció',
     image: '/images/services/rehabilitacio.png',
+    alt: 'Hanyatt fekvő páciens gumiszalaggal végzett vállerősítő gyakorlata',
     description:
       'Sérülések, műtétek vagy hosszabb kihagyás után fokozatosan építjük vissza a mozgásbiztonságot.',
   },
@@ -59,6 +69,7 @@ const SERVICES: Service[] = [
     number: '06',
     title: 'Fájdalomcsökkentés',
     image: '/images/services/fajdalomcsokkentes.png',
+    alt: 'Gyógytornász ülő helyzetben vizsgálja és kezeli a páciens vállát és hátát',
     description:
       'A kiváltó okok feltárására és a panaszok hosszú távú enyhítésére helyezzük a hangsúlyt.',
   },
@@ -66,6 +77,7 @@ const SERVICES: Service[] = [
     number: '07',
     title: 'Mozgáskontroll',
     image: '/images/services/mozgas-kontroll.png',
+    alt: 'Páciens kinyújtott karral hengert tart, a gyógytornász a lapocka mozgását irányítja',
     imagePosition: '50% 78%',
     description:
       'A pontosabb testérzékelés és koordináció fejlesztésével hatékonyabbá és tudatosabbá válhat a mozgás.',
@@ -74,6 +86,7 @@ const SERVICES: Service[] = [
     number: '08',
     title: 'Prevenció',
     image: '/images/services/prevencio.png',
+    alt: 'Fitneszlabdán fekve végzett erősítő gyakorlat gyógytornász felügyeletével',
     description:
       'A rendszeres, tudatos mozgással megelőzhetők bizonyos túlterhelések és visszatérő panaszok.',
   },
@@ -120,7 +133,16 @@ const imageVariants: Variants = {
   },
 };
 
-export default function Services() {
+type ServicesProps = {
+  /** 1 on the stand-alone /services page, 2 inside the Home one-pager. */
+  level?: 1 | 2;
+};
+
+export default function Services({ level = 1 }: ServicesProps) {
+  const Heading = level === 1 ? 'h1' : 'h2';
+  const Sub = level === 1 ? 'h2' : 'h3';
+  const isPage = level === 1;
+
   return (
     <section
       id='services'
@@ -130,10 +152,15 @@ export default function Services() {
       <div className={styles.inner}>
         <header className={styles.intro}>
           <div>
-            <h1 id='services-title' className={styles.title}>
-              <span className={styles.titleLine}>Mozgásban rejlő</span>
+            <Heading id='services-title' className={styles.title}>
+              {isPage && (
+                <span className={styles.eyebrow}>
+                  Gyógytorna · Manuálterápia · Rehabilitáció
+                {' '}</span>
+              )}
+              <span className={styles.titleLine}>Mozgásban rejlő </span>
               <span className={styles.titleLine}>lehetőségek.</span>
-            </h1>
+            </Heading>
           </div>
           <p className={styles.lead}>
             Személyre szabott kezelésekkel és tudatos mozgással segítek abban,
@@ -162,7 +189,7 @@ export default function Services() {
                     >
                       <Image
                         src={service.image}
-                        alt={service.title}
+                        alt={service.alt ?? service.title}
                         fill
                         sizes='(min-width: 1200px) 300px, (min-width: 820px) 50vw, 100vw'
                         className={styles.image}
@@ -181,12 +208,38 @@ export default function Services() {
                   <span className={styles.number}>{service.number}</span>
                   <span className={styles.rule} aria-hidden='true' />
                 </div>
-                <h2 className={styles.cardTitle}>{service.title}</h2>
+                <Sub className={styles.cardTitle}>{service.title}</Sub>
                 <p className={styles.cardText}>{service.description}</p>
               </article>
             </motion.li>
           ))}
         </motion.ul>
+
+        {/* Links to the patient-information pages (crawlable on Home too). */}
+        <nav className={styles.topics} aria-labelledby='services-topics-title'>
+          <Sub id='services-topics-title' className={styles.topicsTitle}>
+            Gyakori panaszok és kezelések
+          </Sub>
+          <ul className={styles.topicList}>
+            {TOPIC_LIST.map((topic) => (
+              <li key={topic.slug}>
+                <Link href={topic.path} className={styles.topicLink}>
+                  {topic.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {isPage && (
+          <PageNote>
+            Az első alkalommal felmérjük az állapotodat, és ez alapján állítjuk
+            össze a kezelést. <Link href='/booking'>Foglalj időpontot online</Link>,
+            nézd meg az <Link href='/pricing'>árakat</Link>, vagy olvass a{' '}
+            <Link href='/about'>végzettségeimről és szakterületeimről</Link>.
+            Kérdés esetén <Link href='/contact'>itt érsz el</Link>.
+          </PageNote>
+        )}
       </div>
     </section>
   );

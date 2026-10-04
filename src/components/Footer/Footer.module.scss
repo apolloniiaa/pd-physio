@@ -3,6 +3,10 @@
 @use '../../styles/mixins' as *;
 @use '../../styles/typography' as *;
 
+// Atmospheric blues shared with the Contact / Booking art direction.
+$atmo-sky: #a1c4fd;
+$atmo-mist: #c2e9fb;
+
 // Global footer — the closing section of every page. Same palette, type and
 // line work as the page sections; static apart from hover states.
 // The background spans the full viewport width; only .inner is centred.
@@ -15,6 +19,8 @@
   overflow: hidden;
   border-top: 1px solid rgba($color-bone, 0.06);
   background:
+    // Faint blue light pooled behind the brand mark (left).
+    radial-gradient(ellipse 34% 52% at 14% 42%, rgba($color-electric, 0.1), transparent 72%),
     radial-gradient(ellipse 55% 60% at 12% 0%, rgba($color-navy-deep, 0.9), transparent 70%),
     radial-gradient(ellipse 50% 50% at 92% 100%, rgba($color-navy, 0.7), transparent 72%),
     $color-void;
@@ -37,13 +43,13 @@
 }
 
 .lineMain {
-  stroke: rgba($color-electric, 0.16);
+  stroke: rgba($atmo-sky, 0.14);
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
 }
 
 .lineSoft {
-  stroke: rgba($color-electric-bright, 0.06);
+  stroke: rgba($atmo-mist, 0.06);
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
 }
@@ -62,75 +68,117 @@
   display: grid;
   gap: $spacing-2xl;
 
-  // Tablet: CTA block across the top, pages + contact side by side.
+  // Tablet: brand mark across the top, pages + contact side by side.
   @include respond-to($bp-md) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: $spacing-2xl;
 
-    .intro {
+    .brand {
       grid-column: 1 / -1;
     }
   }
 
-  // Desktop: CTA block | pages | contact.
+  // Desktop: brand | pages (centre) | contact (right).
   @include respond-to($bp-lg) {
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.8fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: start;
     column-gap: 64px;
 
-    .intro {
+    .brand {
       grid-column: auto;
+    }
+
+    .social {
+      justify-self: end;
     }
   }
 }
 
-// ---------- CTA block ----------
+// ---------- Brand mark ----------
 
-// Same filled electric pill as the Booking page CTA.
-.cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: $spacing-2xl;
-  min-width: 260px;
-  max-width: 100%;
-  min-height: 56px;
-  padding: 0 28px 0 32px;
-  border: 1px solid $color-electric;
-  border-radius: 999px;
-  background-color: $color-electric;
+.brand {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.identity {
+  margin-top: $spacing-lg;
   color: $color-bone;
-  font-size: $font-size-xs;
-  font-weight: $font-weight-medium;
-  letter-spacing: 0.16em;
-  text-decoration: none;
-  text-transform: uppercase;
-  white-space: nowrap;
-  // Same hover as the Home "IDŐPONTFOGLALÁS" button: same blue, a touch
-  // brighter, 1px lift, soft blue glow, arrow nudge.
-  transition:
-    transform 400ms $ease-editorial,
-    box-shadow 400ms $ease-editorial,
-    filter 400ms $ease-editorial;
+  font-size: $font-size-sm;
+  letter-spacing: 0.04em;
+}
 
-  &:hover {
-    filter: brightness(1.06);
-    transform: translateY(-1px);
-    box-shadow: 0 10px 28px -12px rgba($color-electric, 0.7);
+.identityRole {
+  display: block;
+  margin-top: 2px;
+  color: rgba($color-cool-gray, 0.85);
+  font-size: 13px;
+}
 
-    .ctaArrow {
-      transform: translateX(4px);
-    }
+.address {
+  margin-top: $spacing-md;
+  color: rgba($color-cool-gray, 0.8);
+  font-size: 13px;
+  font-style: normal;
+  line-height: 1.6;
+}
+
+.brandLink {
+  position: relative;
+  display: inline-flex;
+  border-radius: 8px;
+
+  // Barely-there blue halo so the mark sits in the footer's light rather
+  // than on top of it. No box, no border.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -45% -55%;
+    z-index: -1;
+    background: radial-gradient(
+      closest-side,
+      rgba($color-electric, 0.22),
+      rgba($color-navy-deep, 0.35) 55%,
+      transparent
+    );
+    filter: blur(12px);
+    pointer-events: none;
   }
 
   &:focus-visible {
-    outline: 2px solid $color-bone;
-    outline-offset: 3px;
+    outline: 2px solid $color-electric-bright;
+    outline-offset: 8px;
   }
 }
 
-.ctaArrow {
-  flex-shrink: 0;
-  transition: transform 400ms $ease-editorial;
+// The PD monogram painted with the site blues: the logo PNG is an alpha
+// mask over a soft mist → sky → electric gradient (same family as the
+// Booking / Contact light), so it reads as a brand mark, not a pasted image.
+.mark {
+  display: block;
+  width: 68px;
+  aspect-ratio: 311 / 285;
+  background: linear-gradient(
+    155deg,
+    $atmo-mist 0%,
+    $atmo-sky 38%,
+    $color-electric-bright 68%,
+    $color-electric 100%
+  );
+  mask: url('/images/logo-mark.png') center / contain no-repeat;
+  -webkit-mask: url('/images/logo-mark.png') center / contain no-repeat;
+  opacity: 0.92;
+  transition: opacity 400ms $ease-editorial;
+
+  @include respond-to($bp-lg) {
+    width: 80px;
+  }
+
+  .brandLink:hover & {
+    opacity: 1;
+  }
 }
 
 // ---------- Columns ----------
@@ -193,7 +241,7 @@
   }
 }
 
-// Five icon-only links in one row (never wraps).
+// Four icon-only links in one row (never wraps).
 .iconRow {
   display: flex;
   flex-wrap: nowrap;
@@ -267,14 +315,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   .iconLink,
-  .cta,
-  .ctaArrow,
+  .mark,
   .navLink {
     transition: none;
   }
 
-  .cta:hover,
-  .cta:hover .ctaArrow,
   .iconLink:hover {
     transform: none;
   }

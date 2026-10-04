@@ -1,8 +1,18 @@
 import Image from 'next/image';
+import Link from 'next/link';
+import PageNote from '@/components/PageNote/PageNote';
 import AboutBackdrop from './AboutBackdrop';
 import styles from './About.module.scss';
 
-export default function About() {
+type AboutProps = {
+  /** 1 on the stand-alone /about page, 2 inside the Home one-pager. */
+  level?: 1 | 2;
+};
+
+export default function About({ level = 1 }: AboutProps) {
+  const Heading = level === 1 ? 'h1' : 'h2';
+  const isPage = level === 1;
+
   return (
     <section id='about' className={styles.about} aria-labelledby='about-title'>
       {/* Static background arcs (decorative): only portions are visible. */}
@@ -21,18 +31,24 @@ export default function About() {
         <div className={styles.media}>
           <Image
             src='/images/about/about-portrait.jpg'
-            alt='Gyógytornász kezelés közben a kezelőágy mellett'
+            alt='Petró Dániel gyógytornász-manuálterapeuta portréja'
             fill
-            priority
-            sizes='(min-width: 1600px) 505px, (min-width: 560px) 483px, 100vw'
+            // Above the fold only on /about; lazy inside the Home one-pager.
+            priority={isPage}
+            sizes='(min-width: 1600px) 480px, (min-width: 560px) 455px, 100vw'
             className={styles.image}
           />
         </div>
 
         <div className={styles.content}>
-          <h1 id='about-title' className={styles.title}>
+          <Heading id='about-title' className={styles.title}>
+            {isPage && (
+              <span className={styles.eyebrow}>
+                Petró Dániel · Gyógytornász-manuálterapeuta
+              {' '}</span>
+            )}
             Hiszek a tudatos és tartós változásban.
-          </h1>
+          </Heading>
 
           {/* Body copy exactly as in the Figma About section. */}
           <div className={styles.body}>
@@ -52,7 +68,7 @@ export default function About() {
               képzéssel bővítettem.
             </p>
             <p>
-              Szakterületeim közé tartoznak derék-, nyak-,gerincproblémák
+              Szakterületeim közé tartoznak derék-, nyak-, gerincproblémák,
               ízületi fájdalmak, valamint a sport révén közel állnak hozzám a
               sportsérülések és az azt követő rehabilitáció. Az elmúlt években
               kiemelten fontos terület lett a munkám során a vállsérülések -
@@ -60,6 +76,15 @@ export default function About() {
               rehabilitáció.
             </p>
           </div>
+
+          {isPage && (
+            <PageNote>
+              Ismerd meg a <Link href='/services'>kezeléseket és szolgáltatásokat</Link>,
+              olvass a <Link href='/gyogytorna'>gyógytornáról</Link> és a{' '}
+              <Link href='/manualterapia'>manuálterápiáról</Link>, vagy{' '}
+              <Link href='/booking'>foglalj időpontot online</Link>.
+            </PageNote>
+          )}
         </div>
       </div>
     </section>

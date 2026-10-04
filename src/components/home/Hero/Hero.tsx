@@ -7,6 +7,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { Cormorant_Garamond } from 'next/font/google';
+import BookingButton from '@/components/BookingButton/BookingButton';
 import styles from './Hero.module.scss';
 
 // Editorial serif for the Home headline only (scoped to this component, so
@@ -18,7 +19,6 @@ const heroSerif = Cormorant_Garamond({
   display: 'swap',
 });
 
-const BOOKING_HREF = '/booking';
 const DESCRIPTORS = ['Mozgás', 'Regeneráció', 'Egyensúly'];
 const BADGE = ['Movement', 'Recovery', 'Balance'];
 
@@ -69,28 +69,6 @@ function FeatureIcon({ name }: { name: Feature['icon'] }) {
   );
 }
 
-function ArrowRight() {
-  return (
-    <svg
-      className={styles.ctaArrow}
-      width='16'
-      height='10'
-      viewBox='0 0 16 10'
-      fill='none'
-      aria-hidden='true'
-      focusable='false'
-    >
-      <path
-        d='M0 5h15M10.5.75 15 5l-4.5 4.25'
-        stroke='currentColor'
-        strokeWidth='1.2'
-        strokeLinecap='round'
-        strokeLinejoin='round'
-      />
-    </svg>
-  );
-}
-
 export default function Hero() {
   return (
     <section
@@ -101,7 +79,7 @@ export default function Hero() {
       <div className={styles.media}>
         <Image
           src='/images/home/hero.png'
-          alt=''
+          alt='Petró Dániel gyógytornász segít egy páciensnek, aki fitneszlabdán fekve kézisúlyzókkal gyakorol'
           fill
           priority
           sizes='100vw'
@@ -131,20 +109,22 @@ export default function Hero() {
 
       <div className={styles.inner}>
         <div className={styles.content}>
-          <p className={styles.eyebrow}>Gyógytorna · Manuálterápia</p>
-          <h1 id='hero-title' className={styles.title}>
-            <span className={styles.titleLine}>Személyre szabott </span>
-            <span className={styles.titleLine}>kezelések a teljesebb </span>
-            <span className={styles.titleLine}>mozgásért</span>
+          {/* The H1 carries both the topic line (gyógytorna · manuálterápia)
+              and the headline, so search engines read the full subject.
+              Visually unchanged: the topic line keeps the eyebrow style. */}
+          <h1 id='hero-title' className={styles.heading}>
+            <span className={styles.eyebrow}>Gyógytorna · Manuálterápia</span>{' '}
+            <span className={styles.title}>
+              <span className={styles.titleLine}>Személyre szabott </span>
+              <span className={styles.titleLine}>kezelések a teljesebb </span>
+              <span className={styles.titleLine}>mozgásért</span>
+            </span>
           </h1>
           <p className={styles.body}>
-            Célom, hogy segítshessek a fájdalommentesebb szabadabb és
+            Célom, hogy segíthessek a fájdalommentesebb, szabadabb és
             kiegyensúlyozottabb mindennapokban.
           </p>
-          <a href={BOOKING_HREF} className={styles.cta}>
-            <span>Időpontfoglalás</span>
-            <ArrowRight />
-          </a>
+          <BookingButton className={styles.cta} />
           <p className={styles.descriptor}>
             <span className={styles.descriptorRule} aria-hidden='true' />
             {DESCRIPTORS.map((word, index) => (

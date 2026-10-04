@@ -134,7 +134,7 @@ $atmo-lift: #29365a;
   flex: 1;
   flex-direction: column;
   padding: 32px 28px 30px;
-  border: 1px solid rgba($color-bone, 0.12);
+  border: 1.5px solid rgba($color-bone, 0.18);
   border-radius: $radius-sm;
   // Smoked navy glass with a faint blue tint in the top-left corner.
   background:
@@ -305,4 +305,22 @@ $atmo-lift: #29365a;
   .card:hover {
     transform: none;
   }
+}
+
+// Topic line inside the page H1 (stand-alone page only): same small
+// uppercase style as the Booking / Reviews eyebrows.
+.eyebrow {
+  display: block;
+  margin-bottom: $spacing-md;
+  color: $color-header-cta;
+  font-family: $font-sans;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-regular;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.note {
+  margin-top: $spacing-2xl;
 }
