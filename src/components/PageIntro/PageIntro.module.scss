@@ -86,7 +86,7 @@ $route-active: '.intro[data-route]';
     animation: intro-rise map.get($t, text) $intro-ease map.get($t, text-delay) both;
   }
 
-  #{$route-active} ~ :global(main > :first-child:not(:has(#booking)) a[href='/booking']) {
+  #{$route-active} ~ :global(main > :first-child:not(:has(#booking)) a[href^='https://borostyan-fizio.salonic.hu']) {
     --intro-rise: #{map.get($t, rise)};
     animation: intro-rise map.get($t, text) $intro-ease map.get($t, cta-delay) both;
   }
@@ -124,7 +124,7 @@ $route-active: '.intro[data-route]';
   }
 
   // 3d. Booking CTA arrives last
-  #{$intro-active} ~ :global(main > :first-child:not(:has(#booking)) a[href='/booking']) {
+  #{$intro-active} ~ :global(main > :first-child:not(:has(#booking)) a[href^='https://borostyan-fizio.salonic.hu']) {
     --intro-rise: #{map.get($t, rise)};
     animation: intro-rise map.get($t, text) $intro-ease map.get($t, cta-delay) both;
   }

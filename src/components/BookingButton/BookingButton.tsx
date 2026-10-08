@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { BOOKING_PATH } from '@/lib/site';
+import { BOOKING_URL } from '@/lib/site';
 import styles from './BookingButton.module.scss';
 
 // The site's primary "IDŐPONTFOGLALÁS" button (filled electric-blue pill with
@@ -7,8 +6,10 @@ import styles from './BookingButton.module.scss';
 // (margins) is passed in by the parent through `className`.
 export default function BookingButton({ className }: { className?: string }) {
   return (
-    <Link
-      href={BOOKING_PATH}
+    <a
+      href={BOOKING_URL}
+      target='_blank'
+      rel='noopener noreferrer'
       className={className ? `${styles.button} ${className}` : styles.button}
     >
       <span>Időpontfoglalás</span>
@@ -29,6 +30,7 @@ export default function BookingButton({ className }: { className?: string }) {
           strokeLinejoin='round'
         />
       </svg>
-    </Link>
+      <span className={styles.srOnly}> (új lapon nyílik meg)</span>
+    </a>
   );
 }

@@ -5,6 +5,7 @@ import { PRICES } from '@/data/pricing';
 import AboutBackdrop from '@/components/about/About/AboutBackdrop';
 import { PricingCardItem, PricingGrid } from './PricingCards';
 import styles from './Pricing.module.scss';
+import { BOOKING_URL } from '@/lib/site';
 
 // Editorial serif for the page heading (scoped to this component, so the
 // global typography system is unchanged).
@@ -105,7 +106,7 @@ export default function Pricing({ level = 1 }: PricingProps) {
 
         {isPage && (
           <PageNote className={styles.note}>
-            Minden kezelés 55 perces. <Link href='/booking'>Foglalj időpontot online</Link>{' '}
+            Minden kezelés 55 perces. <a href={BOOKING_URL} target='_blank' rel='noopener noreferrer'>Foglalj időpontot online</a>{' '}
             gyógytornára vagy manuálterápiára, vagy olvass arról,{' '}
             <Link href='/gyogytorna'>hogyan zajlik a gyógytorna</Link>.
           </PageNote>

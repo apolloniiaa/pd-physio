@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import styles from './not-found.module.scss';
+import { BOOKING_URL } from '@/lib/site';
 
 // 404 — Next.js serves it with a 404 status and a noindex robots tag.
 export const metadata: Metadata = {
@@ -31,7 +32,7 @@ export default function NotFound() {
             <Link href='/gyogytorna'>Gyógytorna</Link>
           </li>
           <li>
-            <Link href='/booking'>Időpontfoglalás</Link>
+            <a href={BOOKING_URL} target='_blank' rel='noopener noreferrer'>Időpontfoglalás</a>
           </li>
           <li>
             <Link href='/contact'>Kapcsolat</Link>

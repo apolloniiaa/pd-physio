@@ -81,11 +81,12 @@ export const SOCIAL = {
   facebook: 'https://www.facebook.com/danielptr2016',
 } as const;
 
-/** Internal booking page — the destination of every IDŐPONTFOGLALÁS button. */
-export const BOOKING_PATH = '/booking';
-
-/** External online booking platform (opens in a new tab). */
-export const BOOKING_PLATFORM_URL = 'https://borostyanfizio.com/';
+/**
+ * Online appointment booking (Salonic) — the destination of every
+ * IDŐPONTFOGLALÁS button and booking link. Always opens in a new tab.
+ */
+export const BOOKING_URL =
+  'https://borostyan-fizio.salonic.hu/employees/30887/?placeId=12731';
 
 export const OG_IMAGE = {
   url: '/images/og/pd-physio-og.jpg',

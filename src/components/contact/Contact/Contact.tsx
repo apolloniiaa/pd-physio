@@ -1,10 +1,10 @@
-import Link from 'next/link';
 import { Cormorant_Garamond } from 'next/font/google';
 import BookingButton from '@/components/BookingButton/BookingButton';
 import PageNote from '@/components/PageNote/PageNote';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import AboutBackdrop from '@/components/about/About/AboutBackdrop';
 import styles from './Contact.module.scss';
+import { BOOKING_URL } from '@/lib/site';
 
 // Editorial serif for the heading (scoped to this component, so the global
 // typography system is unchanged).
@@ -126,7 +126,7 @@ export default function Contact({ level = 1 }: ContactProps) {
             <PageNote>
               A rendelő Budapest IX. kerületében, Ferencvárosban, a Vágóhíd
               utcában található. Időpontot{' '}
-              <Link href='/booking'>online is foglalhatsz</Link>.
+              <a href={BOOKING_URL} target='_blank' rel='noopener noreferrer'>online is foglalhatsz</a>.
             </PageNote>
           )}
         </div>

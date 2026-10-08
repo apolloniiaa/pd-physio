@@ -3,6 +3,7 @@ import { Cormorant_Garamond } from 'next/font/google';
 import PageNote from '@/components/PageNote/PageNote';
 import { ReviewTimeline } from './ReviewCards';
 import styles from './Reviews.module.scss';
+import { BOOKING_URL } from '@/lib/site';
 
 // Editorial serif for the heading and rating (scoped to this component, so
 // the global typography system is unchanged).
@@ -162,7 +163,7 @@ export default function Reviews({ level = 1 }: ReviewsProps) {
         {isPage && (
           <PageNote className={styles.note}>
             Ha te is szeretnél segítséget kérni,{' '}
-            <Link href='/booking'>foglalj időpontot online</Link>, vagy nézd
+            <a href={BOOKING_URL} target='_blank' rel='noopener noreferrer'>foglalj időpontot online</a>, vagy nézd
             meg, <Link href='/services'>milyen kezelésekkel dolgozom</Link>.
           </PageNote>
         )}

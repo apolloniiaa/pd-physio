@@ -3,6 +3,7 @@ import Link from 'next/link';
 import PageNote from '@/components/PageNote/PageNote';
 import AboutBackdrop from './AboutBackdrop';
 import styles from './About.module.scss';
+import { BOOKING_URL } from '@/lib/site';
 
 type AboutProps = {
   /** 1 on the stand-alone /about page, 2 inside the Home one-pager. */
@@ -82,7 +83,7 @@ export default function About({ level = 1 }: AboutProps) {
               Ismerd meg a <Link href='/services'>kezeléseket és szolgáltatásokat</Link>,
               olvass a <Link href='/gyogytorna'>gyógytornáról</Link> és a{' '}
               <Link href='/manualterapia'>manuálterápiáról</Link>, vagy{' '}
-              <Link href='/booking'>foglalj időpontot online</Link>.
+              <a href={BOOKING_URL} target='_blank' rel='noopener noreferrer'>foglalj időpontot online</a>.
             </PageNote>
           )}
         </div>

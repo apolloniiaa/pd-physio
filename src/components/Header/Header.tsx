@@ -18,6 +18,7 @@ import {
   type Transition,
   type Variants,
 } from 'motion/react';
+import { BOOKING_URL } from '@/lib/site';
 import styles from './Header.module.scss';
 
 type NavItem = {
@@ -34,9 +35,10 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'KAPCSOLAT', href: '/#contact' },
 ];
 
-const BOOKING_ITEM: NavItem = {
+// External online booking (Salonic), opens in a new tab.
+const BOOKING_ITEM = {
   label: 'IDŐPONTFOGLALÁS',
-  href: '/booking',
+  href: BOOKING_URL,
 };
 
 /** Must match $bp-lg in src/styles/_breakpoints.scss */
@@ -325,10 +327,15 @@ export default function Header() {
             </ul>
           </nav>
 
-          <Link href={BOOKING_ITEM.href} className={styles.cta}>
+          <a
+            href={BOOKING_ITEM.href}
+            target='_blank'
+            rel='noopener noreferrer'
+            className={styles.cta}
+          >
             <span className={styles.ctaLabel}>{BOOKING_ITEM.label}</span>
             <ArrowIcon />
-          </Link>
+          </a>
 
           <button
             ref={toggleRef}
@@ -401,14 +408,16 @@ export default function Header() {
                   className={styles.mobileCtaItem}
                   variants={itemVariants}
                 >
-                  <Link
+                  <a
                     href={BOOKING_ITEM.href}
+                    target='_blank'
+                    rel='noopener noreferrer'
                     className={`${styles.mobileLink} ${styles.mobileCta}`}
                     onClick={closeMenu}
                   >
                     <span>{BOOKING_ITEM.label}</span>
                     <ArrowIcon />
-                  </Link>
+                  </a>
                 </motion.li>
               </motion.ul>
             </motion.nav>

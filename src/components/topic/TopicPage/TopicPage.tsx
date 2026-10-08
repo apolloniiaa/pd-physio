@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Cormorant_Garamond } from 'next/font/google';
 import JsonLd from '@/components/JsonLd/JsonLd';
 import { TOPICS, type Topic, type TopicSection } from '@/data/topics';
-import { ADDRESS, CONTACT, PRACTITIONER } from '@/lib/site';
+import { ADDRESS, BOOKING_URL, CONTACT, PRACTITIONER } from '@/lib/site';
 import { pageGraph } from '@/lib/structuredData';
 import styles from './TopicPage.module.scss';
 
@@ -140,10 +140,15 @@ export default function TopicPage({ topic }: { topic: Topic }) {
           <p className={styles.lead}>{topic.lead}</p>
 
           <div className={styles.actions}>
-            <Link href='/booking' className={styles.cta}>
+            <a
+              href={BOOKING_URL}
+              target='_blank'
+              rel='noopener noreferrer'
+              className={styles.cta}
+            >
               <span>Időpontfoglalás</span>
               <ArrowIcon className={styles.ctaArrow} />
-            </Link>
+            </a>
             <Link href='/pricing' className={styles.secondary}>
               Kezelési díjak
             </Link>
@@ -198,10 +203,15 @@ export default function TopicPage({ topic }: { topic: Topic }) {
               </p>
 
               <div className={styles.asideLinks}>
-                <Link href='/booking' className={styles.asideCta}>
+                <a
+              href={BOOKING_URL}
+              target='_blank'
+              rel='noopener noreferrer'
+              className={styles.asideCta}
+            >
                   Online időpontfoglalás
                   <ArrowIcon className={styles.ctaArrow} />
-                </Link>
+                </a>
                 <Link href='/contact' className={styles.inlineLink}>
                   Elérhetőség és térkép
                 </Link>
@@ -237,10 +247,15 @@ export default function TopicPage({ topic }: { topic: Topic }) {
             található.
           </p>
           <div className={styles.actions}>
-            <Link href='/booking' className={styles.cta}>
+            <a
+              href={BOOKING_URL}
+              target='_blank'
+              rel='noopener noreferrer'
+              className={styles.cta}
+            >
               <span>Időpontfoglalás</span>
               <ArrowIcon className={styles.ctaArrow} />
-            </Link>
+            </a>
             <Link href='/services' className={styles.secondary}>
               Összes szolgáltatás
             </Link>

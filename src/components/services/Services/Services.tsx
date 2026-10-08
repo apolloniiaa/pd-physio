@@ -6,6 +6,7 @@ import { motion, type Variants } from 'motion/react';
 import PageNote from '@/components/PageNote/PageNote';
 import { TOPIC_LIST } from '@/data/topics';
 import styles from './Services.module.scss';
+import { BOOKING_URL } from '@/lib/site';
 
 type Service = {
   number: string;
@@ -234,7 +235,7 @@ export default function Services({ level = 1 }: ServicesProps) {
         {isPage && (
           <PageNote>
             Az első alkalommal felmérjük az állapotodat, és ez alapján állítjuk
-            össze a kezelést. <Link href='/booking'>Foglalj időpontot online</Link>,
+            össze a kezelést. <a href={BOOKING_URL} target='_blank' rel='noopener noreferrer'>Foglalj időpontot online</a>,
             nézd meg az <Link href='/pricing'>árakat</Link>, vagy olvass a{' '}
             <Link href='/about'>végzettségeimről és szakterületeimről</Link>.
             Kérdés esetén <Link href='/contact'>itt érsz el</Link>.
