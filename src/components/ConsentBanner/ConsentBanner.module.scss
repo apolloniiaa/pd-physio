@@ -1,0 +1,92 @@
+@use '../../styles/variables' as *;
+@use '../../styles/breakpoints' as *;
+@use '../../styles/mixins' as *;
+@use '../../styles/typography' as *;
+
+// Compact consent bar in the site's own palette: navy glass panel, bone
+// text, electric-blue accept + outlined decline (same size, same weight).
+
+.banner {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  z-index: 900; // above the navbar (100), below the page-load veil (1000)
+  display: grid;
+  gap: $spacing-md;
+  max-width: 760px;
+  margin-inline: auto;
+  padding: 20px;
+  border: 1px solid rgba($color-bone, 0.1);
+  border-radius: 12px;
+  background-color: rgba($color-navy-deep, 0.96);
+  box-shadow: 0 24px 56px -24px rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+
+  @include respond-to($bp-md) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: $spacing-xl;
+    bottom: 24px;
+    padding: 20px 24px;
+  }
+}
+
+.text {
+  color: rgba($color-bone, 0.86);
+  font-size: $font-size-sm;
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.button {
+  display: inline-flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 128px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid rgba($color-bone, 0.4);
+  border-radius: 999px;
+  background: transparent;
+  color: $color-bone;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    filter 300ms $ease-editorial,
+    border-color 300ms $ease-editorial;
+
+  &:hover {
+    border-color: $color-bone;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-bone;
+    outline-offset: 3px;
+  }
+}
+
+.accept {
+  border-color: $color-electric;
+  background-color: $color-electric;
+
+  &:hover {
+    border-color: $color-electric;
+    filter: brightness(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}

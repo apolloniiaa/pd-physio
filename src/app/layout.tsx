@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { IBM_Plex_Mono, IBM_Plex_Sans, Space_Grotesk } from 'next/font/google';
+import Analytics from '@/components/Analytics/Analytics';
+import ConsentBanner from '@/components/ConsentBanner/ConsentBanner';
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
 import JsonLd from '@/components/JsonLd/JsonLd';
@@ -114,6 +116,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <Header />
         {children}
         <Footer />
+        {/* Cookie consent + GA4 (loaded only after consent). */}
+        <ConsentBanner />
+        <Analytics />
       </body>
     </html>
   );

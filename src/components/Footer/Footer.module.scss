@@ -296,6 +296,33 @@ $atmo-mist: #c2e9fb;
   }
 }
 
+// "Cookie-beállítások": text link in the bottom bar (re-opens the banner).
+.separator {
+  margin-inline: 10px;
+}
+
+.cookieButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba($color-cool-gray, 0.35);
+  text-underline-offset: 3px;
+  cursor: pointer;
+
+  &:hover {
+    color: $color-bone;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-electric-bright;
+    outline-offset: 2px;
+  }
+}
+
 // Understated studio credit (right side of the bottom bar).
 .credit {
   color: rgba($color-cool-gray, 0.6);

@@ -7,6 +7,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { ADDRESS } from '@/lib/site';
+import { CookieSettingsButton } from '@/components/ConsentBanner/ConsentBanner';
 import styles from './Footer.module.scss';
 
 type FooterLink = {
@@ -169,7 +170,13 @@ export default function Footer() {
         </div>
 
         <div className={styles.bottom}>
-          <p>© 2026 Petró Dániel Physio. Minden jog fenntartva</p>
+          <p>
+            © 2026 Petró Dániel Physio. Minden jog fenntartva
+            <span className={styles.separator} aria-hidden='true'>
+              ·
+            </span>
+            <CookieSettingsButton className={styles.cookieButton} />
+          </p>
           <p className={styles.credit}>Crafted by DIV.Studio</p>
         </div>
       </div>
