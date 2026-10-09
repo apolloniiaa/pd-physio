@@ -1,9 +1,6 @@
-import Link from 'next/link';
 import { Cormorant_Garamond } from 'next/font/google';
-import PageNote from '@/components/PageNote/PageNote';
 import { ReviewTimeline } from './ReviewCards';
 import styles from './Reviews.module.scss';
-import { BOOKING_URL } from '@/lib/site';
 
 // Editorial serif for the heading and rating (scoped to this component, so
 // the global typography system is unchanged).
@@ -17,38 +14,70 @@ const editorialSerif = Cormorant_Garamond({
 type Review = {
   name: string;
   rating: number;
+  /** Relative date as shown on Google at the time of capture. */
   date: string;
-  text: string;
+  /**
+   * Approximate age in days, derived from the Google label (used for
+   * ordering — the label itself is never sorted as text). Equal ages keep
+   * the order listed below.
+   */
+  ageDays: number;
+  /** One string per paragraph. */
+  text: string[];
 };
 
-// Real Google reviews about Petró Dániel — wording kept exactly as published.
-// Do not edit the text.
+// Google reviews about Petró Dániel. Displayed newest → oldest (sorted by
+// ageDays below). Google only shows relative dates; Csaba Kereszturi's and
+// Nóra Bányai's are both "1 month ago", so Csaba is listed first by
+// agreement. Texts as published; Nóra Bányai's review is shown in its
+// Hungarian wording.
 const REVIEWS: Review[] = [
+  {
+    name: 'Ferenc Antal',
+    rating: 5,
+    date: '4 weeks ago',
+    ageDays: 28,
+    text: [
+      'Petro Danihoz járok gyógytornára a vállműtétem óta. Az operáló orvos ajánlotta. Onnan indultunk, hogy a műtét után meg sem bírtam mozdítani a karom. Az ő segítségével oda jutottunk, hogy a 20 kg-os unokámat simán emelgetem a műtött karommal.',
+      'A rehabilitáció során nagy szakértelemmel tanította be a mozgásokat, rendszeresen konzultált az orvossal, és az adottságaim figyelembevételével felépítette a teljes mozgásterjedelmet. Emellett támogatott, amikor időnként elvesztettem a hitemet a teljes felépülésben, és nem hagyta, hogy a lendület alábbhagyjon.',
+      'Szóval PROFI. Mellesleg kérlelhetetlenül őszinte, jó humorú, érdeklődő, gondoskodó és nyitott egyéniség, jó ember. Igazából az állapotom már nem indokolja, hogy hozzá járjak, de hiányoznának a beszélgetések, jópofaságok – ja, és persze a rendszeres mozgás is.',
+    ],
+  },
+  {
+    name: 'Csaba Kereszturi',
+    rating: 5,
+    date: '1 month ago',
+    ageDays: 30,
+    text: [
+      'Több gyógytornásznál jártam életem során, de elég gyenge/közepes volt mind – kivéve Danit. A gyógytorna-feladatok nagyságrendekkel jobban átmozgatnak és erősítenek, mint korábban bárhol. A manuálterápia során rengeteg különféle fogást és technikát alkalmaz az aktuális problémám megoldására. És ami talán a legfontosabb: törekszik arra, hogy naprakész maradjon a tudásával, és új technikákban is jártas legyen.',
+      'Annak ellenére, hogy számomra már kissé messze van, nem véletlenül követtem, amikor az új helyre jött dolgozni (mely új hely a kisebb, „családiasabb” mivoltában alapvetően szimpatikusabb is, mint a korábbi).',
+    ],
+  },
   {
     name: 'Nóra Bányai',
     rating: 5,
     date: '1 month ago',
-    text: "I have been working with Dani Petró for quite some time now, I visited him with back complaints and my initial condition improved very quickly. He taught me many exercises that I can use at home, but the knowledge of the manual is definitely necessary so that I don't have the pain I used to. I can only recommend him.",
+    ageDays: 30,
+    text: [
+      'Jó ideje járok Petró Dánielhez. Hátpanaszokkal kerestem fel, és már nagyon hamar érezhető javulást tapasztaltam. Sok olyan gyakorlatot tanított, amelyeket otthon is tudok végezni, de a manuálterápiás tudására is mindenképpen szükség van ahhoz, hogy ne térjen vissza a korábbi fájdalmam. Csak ajánlani tudom!',
+    ],
   },
   {
     name: 'Éva Mikó',
     rating: 5,
     date: '4 months ago',
-    text: 'Gyógytornára járok Petró Dánielhez. Hozzáértése, tudása, figyelmessége, kedvessége, hozzájárult a gyógyulásomhoz. Szívből ajánlom mindenkinek. M. Évi',
-  },
-  {
-    name: 'Istvan Nagy',
-    rating: 5,
-    date: '8 months ago',
-    text: 'A hely ahol a kedvesség találkozik a profizmussal!',
-  },
-  {
-    name: 'Edit Decsi',
-    rating: 5,
-    date: '8 months ago',
-    text: 'Profi, kedves, figyelmes, jól képzett terapeuta. Részletes érthető tájékoztatást kapok mindig az állapotomról. Tiszta, jól felszerelt helyiség.',
+    ageDays: 120,
+    text: [
+      'Gyógytornára járok Petró Dánielhez. Hozzáértése, tudása, figyelmessége, kedvessége, hozzájárult a gyógyulásomhoz. Szívből ajánlom mindenkinek. M. Évi',
+    ],
   },
 ];
+
+// Newest first; Array.prototype.sort is stable, so equal ages keep the
+// listed order.
+const REVIEWS_NEWEST_FIRST = [...REVIEWS].sort(
+  (a, b) => a.ageDays - b.ageDays,
+);
 
 // "View all 58 Google reviews" link published on the official Borostyán Fizio
 // website (https://borostyanfizio.com/). Set to null to hide the CTA.
@@ -79,7 +108,6 @@ type ReviewsProps = {
 
 export default function Reviews({ level = 1 }: ReviewsProps) {
   const Heading = level === 1 ? 'h1' : 'h2';
-  const isPage = level === 1;
 
   return (
     <section
@@ -121,7 +149,7 @@ export default function Reviews({ level = 1 }: ReviewsProps) {
 
         {/* Vertical scroll-driven timeline: 01 left, 02 right, … on desktop. */}
         <ReviewTimeline
-          items={REVIEWS.map((review, index) => (
+          items={REVIEWS_NEWEST_FIRST.map((review, index) => (
             <figure key={review.name} className={styles.card}>
               <div className={styles.cardTop}>
                 <Stars count={review.rating} />
@@ -129,7 +157,9 @@ export default function Reviews({ level = 1 }: ReviewsProps) {
               </div>
 
               <blockquote className={styles.quote}>
-                <p>{review.text}</p>
+                {review.text.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
               </blockquote>
 
               <figcaption className={styles.author}>
@@ -158,14 +188,6 @@ export default function Reviews({ level = 1 }: ReviewsProps) {
               <span className={styles.srOnly}>(új lapon nyílik meg)</span>
             </a>
           </div>
-        )}
-
-        {isPage && (
-          <PageNote className={styles.note}>
-            Ha te is szeretnél segítséget kérni,{' '}
-            <a href={BOOKING_URL} target='_blank' rel='noopener noreferrer'>foglalj időpontot online</a>, vagy nézd
-            meg, <Link href='/services'>milyen kezelésekkel dolgozom</Link>.
-          </PageNote>
         )}
       </div>
     </section>

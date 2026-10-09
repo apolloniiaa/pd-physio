@@ -310,3 +310,14 @@ $atmo-lift: #29365a;
     margin-top: 48px;
   }
 }
+
+// Supporting note under the booking button (text only, not a button).
+.ctaNote {
+  max-width: 380px;
+  margin-top: 14px;
+  color: $color-cool-gray;
+  font-family: $font-mono;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}

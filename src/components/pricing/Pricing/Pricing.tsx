@@ -1,11 +1,8 @@
-import Link from 'next/link';
 import { Cormorant_Garamond } from 'next/font/google';
-import PageNote from '@/components/PageNote/PageNote';
 import { PRICES } from '@/data/pricing';
 import AboutBackdrop from '@/components/about/About/AboutBackdrop';
 import { PricingCardItem, PricingGrid } from './PricingCards';
 import styles from './Pricing.module.scss';
-import { BOOKING_URL } from '@/lib/site';
 
 // Editorial serif for the page heading (scoped to this component, so the
 // global typography system is unchanged).
@@ -79,8 +76,8 @@ export default function Pricing({ level = 1 }: PricingProps) {
         </header>
 
         <PricingGrid>
-          {PRICES.map((item) => (
-            <PricingCardItem key={item.number}>
+          {PRICES.map((item, index) => (
+            <PricingCardItem key={item.number} index={index}>
               <article className={styles.card}>
                 <div className={styles.cardTop}>
                   <span className={styles.number}>{item.number}</span>
@@ -103,14 +100,6 @@ export default function Pricing({ level = 1 }: PricingProps) {
             </PricingCardItem>
           ))}
         </PricingGrid>
-
-        {isPage && (
-          <PageNote className={styles.note}>
-            Minden kezelés 55 perces. <a href={BOOKING_URL} target='_blank' rel='noopener noreferrer'>Foglalj időpontot online</a>{' '}
-            gyógytornára vagy manuálterápiára, vagy olvass arról,{' '}
-            <Link href='/gyogytorna'>hogyan zajlik a gyógytorna</Link>.
-          </PageNote>
-        )}
       </div>
     </section>
   );

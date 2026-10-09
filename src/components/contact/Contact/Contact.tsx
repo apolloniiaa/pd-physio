@@ -1,10 +1,10 @@
+import { Fragment } from 'react';
 import { Cormorant_Garamond } from 'next/font/google';
 import BookingButton from '@/components/BookingButton/BookingButton';
-import PageNote from '@/components/PageNote/PageNote';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import AboutBackdrop from '@/components/about/About/AboutBackdrop';
 import styles from './Contact.module.scss';
-import { BOOKING_URL } from '@/lib/site';
+import { ADDRESS } from '@/lib/site';
 
 // Editorial serif for the heading (scoped to this component, so the global
 // typography system is unchanged).
@@ -19,7 +19,6 @@ const CONTACT = {
   phoneDisplay: '+36 20 234 0340',
   phoneHref: 'tel:+36202340340',
   email: 'petrodaniel.manual@gmail.com',
-  address: ['Budapest, 1097. Vágóhíd utca 12–18.', '8. épület, 1. emelet'],
 };
 
 // Shared Lucide settings: one size and stroke weight for all three icons.
@@ -78,8 +77,8 @@ export default function Contact({ level = 1 }: ContactProps) {
             Keress bizalommal.
           </Heading>
           <p className={styles.lead}>
-            Amennyiben kérdése merül fel, időpontot szeretne egyeztetni, vagy
-            további információra van szüksége, állok rendelkezésére.
+            Ha kérdésed van, időpontot szeretnél egyeztetni, vagy többet
+            szeretnél megtudni a kezelésekről, keress bizalommal!
           </p>
 
           {/* Three contact rows: location, phone, email (Lucide icons). */}
@@ -89,9 +88,12 @@ export default function Contact({ level = 1 }: ContactProps) {
                 <MapPin {...ICON_PROPS} />
               </span>
               <address className={styles.detailText}>
-                {CONTACT.address[0]}
-                <br />
-                {CONTACT.address[1]}
+                {ADDRESS.lines.map((line, index) => (
+                  <Fragment key={line}>
+                    {index > 0 && <br />}
+                    {line}
+                  </Fragment>
+                ))}
               </address>
             </li>
             <li className={styles.detail}>
@@ -121,21 +123,16 @@ export default function Contact({ level = 1 }: ContactProps) {
           </ul>
 
           <BookingButton className={styles.cta} />
-
-          {isPage && (
-            <PageNote>
-              A rendelő Budapest IX. kerületében, Ferencvárosban, a Vágóhíd
-              utcában található. Időpontot{' '}
-              <a href={BOOKING_URL} target='_blank' rel='noopener noreferrer'>online is foglalhatsz</a>.
-            </PageNote>
-          )}
+          <p className={styles.ctaNote}>
+            Az időpontfoglalás a Borostyán Fizio Salonic oldalán történik.
+          </p>
         </div>
 
         <div className={styles.mapBlock}>
           <div className={styles.map}>
             <iframe
               src={MAP_EMBED}
-              title='Térkép: a rendelő helye – 1097 Budapest, Vágóhíd utca 12–18.'
+              title={`Térkép – ${ADDRESS.oneLine}`}
               loading='lazy'
               referrerPolicy='no-referrer-when-downgrade'
               className={styles.mapFrame}

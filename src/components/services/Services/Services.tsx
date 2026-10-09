@@ -3,10 +3,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, type Variants } from 'motion/react';
-import PageNote from '@/components/PageNote/PageNote';
 import { TOPIC_LIST } from '@/data/topics';
+import { MQ_MD, MQ_XL, useMediaQuery } from '@/lib/useMediaQuery';
 import styles from './Services.module.scss';
-import { BOOKING_URL } from '@/lib/site';
 
 type Service = {
   number: string;
@@ -47,13 +46,13 @@ const SERVICES: Service[] = [
     image: '/images/services/fasciakezeles.png',
     alt: 'A nyak és a koponyaalap kézi kezelése hanyatt fekvő páciensnél',
     description:
-      'A kötőszöveti rendszer célzott kezelésével támogatjuk a szabadabb és harmonikusabb mozgást.',
+      'A kötőszöveti rendszer feszességét és az abban kialakult diszfunkciókat különböző manuális technikákkal kezeljük a szabad érzés és mozgás érdekében.',
   },
   {
     number: '04',
     title: 'Tartáskorrekció',
-    image: '/images/services/tartaskorrekcio.png',
-    alt: 'Hason fekvő páciens hátizom-aktiváló gyakorlata gyógytornászi irányítással',
+    image: '/images/services/tartaskorrekcios.png',
+    alt: 'Páciens kinyújtott karral hengert tart, a gyógytornász a lapocka mozgását irányítja',
     imagePosition: '50% 62%',
     description:
       'A testtartás és a mozgásminták tudatos fejlesztésével segítünk hosszú távú változást elérni.',
@@ -70,7 +69,7 @@ const SERVICES: Service[] = [
     number: '06',
     title: 'Fájdalomcsökkentés',
     image: '/images/services/fajdalomcsokkentes.png',
-    alt: 'Gyógytornász ülő helyzetben vizsgálja és kezeli a páciens vállát és hátát',
+    alt: 'A gyógytornász a kezelőágyon fekvő páciens hasát és törzsét kezeli kézzel',
     description:
       'A kiváltó okok feltárására és a panaszok hosszú távú enyhítésére helyezzük a hangsúlyt.',
   },
@@ -78,8 +77,8 @@ const SERVICES: Service[] = [
     number: '07',
     title: 'Mozgáskontroll',
     image: '/images/services/mozgas-kontroll.png',
-    alt: 'Páciens kinyújtott karral hengert tart, a gyógytornász a lapocka mozgását irányítja',
-    imagePosition: '50% 78%',
+    alt: 'Páciens fitneszlabdán fekve, kézisúlyzókkal egyensúlyozó gyakorlatot végez gyógytornászi irányítással',
+    imagePosition: '50% 25%',
     description:
       'A pontosabb testérzékelés és koordináció fejlesztésével hatékonyabbá és tudatosabbá válhat a mozgás.',
   },
@@ -87,7 +86,7 @@ const SERVICES: Service[] = [
     number: '08',
     title: 'Prevenció',
     image: '/images/services/prevencio.png',
-    alt: 'Fitneszlabdán fekve végzett erősítő gyakorlat gyógytornász felügyeletével',
+    alt: 'Hason fekvő páciens hátizom-aktiváló gyakorlata gyógytornászi irányítással',
     description:
       'A rendszeres, tudatos mozgással megelőzhetők bizonyos túlterhelések és visszatérő panaszok.',
   },
@@ -100,13 +99,15 @@ const SERVICES: Service[] = [
 /** Slow, settling ease-out — no spring, no overshoot. */
 const EASE_EDITORIAL = [0.22, 1, 0.36, 1] as const;
 
-/** Parent: reveals the cards one after another, 01 → 08. */
-const gridVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: { delayChildren: 0.15, staggerChildren: 0.17 },
-  },
-};
+/**
+ * Each card reveals as it scrolls into view (desktop, tablet and mobile).
+ * `custom` is the card's delay: within each grid row the cards follow one
+ * another with the same 0.15s + 0.17s stagger as before; when the cards are
+ * stacked on phones each one rises as you reach it.
+ */
+const STAGGER_START = 0.15;
+const STAGGER_STEP = 0.17;
+const STACKED_DELAY = 0.05;
 
 /** Card: rises 35px while a bottom mask opens; ends flat and unclipped. */
 const cardVariants: Variants = {
@@ -115,23 +116,23 @@ const cardVariants: Variants = {
     y: 35,
     clipPath: 'inset(0% 0% 14% 0%)',
   },
-  visible: {
+  visible: (delay: number) => ({
     opacity: 1,
     y: 0,
     clipPath: 'inset(0% 0% 0% 0%)',
-    transition: { duration: 1, ease: EASE_EDITORIAL },
+    transition: { duration: 1, ease: EASE_EDITORIAL, delay },
     transitionEnd: { clipPath: 'none' },
-  },
+  }),
 };
 
 /** Photo: settles from a slight zoom and drifts up, a little faster. */
 const imageVariants: Variants = {
   hidden: { scale: 1.06, y: 10 },
-  visible: {
+  visible: (delay: number) => ({
     scale: 1,
     y: 0,
-    transition: { duration: 0.85, ease: EASE_EDITORIAL },
-  },
+    transition: { duration: 0.85, ease: EASE_EDITORIAL, delay },
+  }),
 };
 
 type ServicesProps = {
@@ -143,6 +144,9 @@ export default function Services({ level = 1 }: ServicesProps) {
   const Heading = level === 1 ? 'h1' : 'h2';
   const Sub = level === 1 ? 'h2' : 'h3';
   const isPage = level === 1;
+  const isMd = useMediaQuery(MQ_MD);
+  const isXl = useMediaQuery(MQ_XL);
+  const columns = isXl ? 4 : isMd ? 2 : 1;
 
   return (
     <section
@@ -169,17 +173,22 @@ export default function Services({ level = 1 }: ServicesProps) {
           </p>
         </header>
 
-        <motion.ul
-          className={styles.grid}
-          variants={gridVariants}
-          initial='hidden'
-          animate='visible'
-        >
-          {SERVICES.map((service) => (
+        <ul className={styles.grid}>
+          {SERVICES.map((service, index) => {
+            const delay =
+              columns === 1
+                ? STACKED_DELAY
+                : STAGGER_START + (index % columns) * STAGGER_STEP;
+            return (
             <motion.li
               key={service.number}
               className={styles.card}
               variants={cardVariants}
+              custom={delay}
+              initial='hidden'
+              whileInView='visible'
+              viewport={{ once: true, amount: 0.2 }}
+              data-reveal-item=''
             >
               <article className={styles.cardInner}>
                 <div className={styles.media}>
@@ -187,6 +196,7 @@ export default function Services({ level = 1 }: ServicesProps) {
                     <motion.div
                       className={styles.imageMotion}
                       variants={imageVariants}
+                      custom={delay}
                     >
                       <Image
                         src={service.image}
@@ -213,8 +223,9 @@ export default function Services({ level = 1 }: ServicesProps) {
                 <p className={styles.cardText}>{service.description}</p>
               </article>
             </motion.li>
-          ))}
-        </motion.ul>
+            );
+          })}
+        </ul>
 
         {/* Links to the patient-information pages (crawlable on Home too). */}
         <nav className={styles.topics} aria-labelledby='services-topics-title'>
@@ -231,16 +242,6 @@ export default function Services({ level = 1 }: ServicesProps) {
             ))}
           </ul>
         </nav>
-
-        {isPage && (
-          <PageNote>
-            Az első alkalommal felmérjük az állapotodat, és ez alapján állítjuk
-            össze a kezelést. <a href={BOOKING_URL} target='_blank' rel='noopener noreferrer'>Foglalj időpontot online</a>,
-            nézd meg az <Link href='/pricing'>árakat</Link>, vagy olvass a{' '}
-            <Link href='/about'>végzettségeimről és szakterületeimről</Link>.
-            Kérdés esetén <Link href='/contact'>itt érsz el</Link>.
-          </PageNote>
-        )}
       </div>
     </section>
   );

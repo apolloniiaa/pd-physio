@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import Link from 'next/link';
 import { Cormorant_Garamond } from 'next/font/google';
 import JsonLd from '@/components/JsonLd/JsonLd';
@@ -192,9 +192,12 @@ export default function TopicPage({ topic }: { topic: Topic }) {
 
               <p className={styles.asideLabel}>Rendelő</p>
               <address className={styles.asideText}>
-                {ADDRESS.postalCode} {ADDRESS.city}, Vágóhíd utca 12–18.
-                <br />
-                8. épület, 1. emelet · IX. kerület
+                {ADDRESS.lines.map((line, index) => (
+                  <Fragment key={line}>
+                    {index > 0 && <br />}
+                    {line}
+                  </Fragment>
+                ))}
               </address>
 
               <p className={styles.asideLabel}>Telefon</p>

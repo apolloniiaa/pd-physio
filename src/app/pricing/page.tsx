@@ -6,7 +6,7 @@ import { pageGraph } from '@/lib/structuredData';
 
 const TITLE = 'Gyógytorna és Manuálterápia árak Budapest | Petró Dániel';
 const DESCRIPTION =
-  'Gyógytorna és manuálterápia árai: állapotfelmérés 20.000 Ft, kezelés 18.000 Ft (55 perc), 6 és 10 alkalmas bérlet. Rendelő: Budapest IX. kerület, Vágóhíd utca.';
+  'Gyógytorna és manuálterápia árai: állapotfelmérés 20.000 Ft, kezelés 18.000 Ft (55 perc), 6 és 10 alkalmas bérlet. Cím: 1097 Vágóhíd utca 12-18 1. emelet kapucsengő B0112.';
 
 export const metadata: Metadata = createMetadata({
   title: TITLE,

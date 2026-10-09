@@ -6,7 +6,7 @@ import { pageGraph } from '@/lib/structuredData';
 
 const TITLE = 'Gyógytornász és Manuálterapeuta Budapest | Kapcsolat';
 const DESCRIPTION =
-  'Petró Dániel gyógytornász-manuálterapeuta elérhetőségei: 1097 Budapest (IX. kerület, Ferencváros), Vágóhíd utca 12–18., 8. épület, 1. emelet · +36 20 234 0340.';
+  'Petró Dániel gyógytornász-manuálterapeuta elérhetőségei. Cím: 1097 Vágóhíd utca 12-18 1. emelet kapucsengő B0112 · +36 20 234 0340.';
 
 export const metadata: Metadata = createMetadata({
   title: TITLE,

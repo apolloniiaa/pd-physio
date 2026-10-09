@@ -98,6 +98,15 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       className={`${fontSans.variable} ${fontDisplay.variable} ${fontMono.variable}`}
     >
       <body>
+        {/* Without JavaScript, scroll-reveal cards (rendered hidden until
+            they animate in) are shown immediately. */}
+        <noscript>
+          <style>
+            {
+              '[data-reveal-item]{opacity:1!important;transform:none!important;clip-path:none!important}'
+            }
+          </style>
+        </noscript>
         {/* Practice + practitioner + website entities (schema.org). */}
         <JsonLd data={siteGraph()} />
         <ScrollTopOnReload />

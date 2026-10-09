@@ -63,13 +63,18 @@ export const CONTACT = {
 } as const;
 
 export const ADDRESS = {
-  street: 'Vágóhíd utca 12–18., 8. épület, 1. emelet',
+  street: 'Vágóhíd utca 12-18 1. emelet kapucsengő B0112',
   postalCode: '1097',
   city: 'Budapest',
   district: 'IX. kerület (Ferencváros)',
   country: 'HU',
-  /** Human-readable single line, used in copy and metadata. */
-  oneLine: '1097 Budapest, Vágóhíd utca 12–18., 8. épület, 1. emelet',
+  /** The address exactly as displayed everywhere on the site. */
+  oneLine: 'Cím: 1097 Vágóhíd utca 12-18 1. emelet kapucsengő B0112',
+  /**
+   * Displayed address (Kapcsolat, footer, info pages): street on the first
+   * line, floor + doorbell on the second.
+   */
+  lines: ['Cím: 1097 Vágóhíd utca 12–18.', '1. emelet, kapucsengő B0112'],
 } as const;
 
 export const MAP_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(

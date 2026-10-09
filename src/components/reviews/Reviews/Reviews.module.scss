@@ -248,31 +248,10 @@ $tl-gap-desktop: 56px; // card edge ↔ centre line on desktop
   display: grid;
   padding-left: $tl-card-offset-mobile;
 
-  // Hairline connecting the card to the line.
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: $tl-x-mobile;
-    width: $tl-card-offset-mobile - $tl-x-mobile;
-    height: 1px;
-    background-color: rgba($color-cool-gray, 0.18);
-    transition: background-color 500ms $ease-editorial;
-  }
-
   @include respond-to($bp-lg) {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     column-gap: $tl-gap-desktop * 2;
     padding-left: 0;
-
-    &::before {
-      left: calc(50% - #{$tl-gap-desktop});
-      width: $tl-gap-desktop;
-    }
-
-    &:nth-of-type(even)::before {
-      left: 50%;
-    }
   }
 }
 
@@ -312,15 +291,11 @@ $tl-gap-desktop: 56px; // card edge ↔ centre line on desktop
   }
 }
 
-// Reviews the marker has passed: filled node, blue connector.
+// Reviews the marker has passed: filled node.
 .timelineItemPassed {
   .node {
     border-color: $color-electric;
     background-color: $color-electric;
-  }
-
-  &::before {
-    background-color: rgba($color-electric, 0.45);
   }
 }
 
@@ -411,6 +386,11 @@ $tl-gap-desktop: 56px; // card edge ↔ centre line on desktop
   font-size: $font-size-md;
   line-height: 1.65;
   overflow-wrap: break-word;
+
+  // Multi-paragraph reviews.
+  p + p {
+    margin-top: 0.9em;
+  }
 
   @include respond-to($bp-lg) {
     font-size: 17px;
@@ -517,7 +497,6 @@ $tl-gap-desktop: 56px; // card edge ↔ centre line on desktop
   .card,
   .cta,
   .node,
-  .timelineItem::before,
   .timelineItem .card {
     transition: none;
   }
@@ -525,9 +504,4 @@ $tl-gap-desktop: 56px; // card edge ↔ centre line on desktop
   .card:hover {
     transform: none;
   }
-}
-
-.note {
-  margin-inline: auto;
-  text-align: center;
 }

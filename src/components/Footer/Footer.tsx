@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import Link from 'next/link';
 import {
   createLucideIcon,
@@ -5,6 +6,7 @@ import {
   Phone,
   type LucideIcon,
 } from 'lucide-react';
+import { ADDRESS } from '@/lib/site';
 import styles from './Footer.module.scss';
 
 type FooterLink = {
@@ -12,14 +14,15 @@ type FooterLink = {
   href: `/${string}`;
 };
 
-// Stand-alone pages (crawlable on every route; the navbar keeps the Home
-// one-page anchors).
+// Home page sections (same anchors as the navbar). From any other route the
+// link opens the Home page and scrolls to the section.
 const PAGES: FooterLink[] = [
-  { label: 'RÓLAM', href: '/about' },
-  { label: 'SZOLGÁLTATÁSOK', href: '/services' },
-  { label: 'ÁRLISTA', href: '/pricing' },
-  { label: 'VISSZAJELZÉSEK', href: '/reviews' },
-  { label: 'KAPCSOLAT', href: '/contact' },
+  { label: 'FŐOLDAL', href: '/' },
+  { label: 'RÓLAM', href: '/#about' },
+  { label: 'SZOLGÁLTATÁSOK', href: '/#services' },
+  { label: 'ÁRLISTA', href: '/#pricing' },
+  { label: 'VISSZAJELZÉSEK', href: '/#reviews' },
+  { label: 'KAPCSOLAT', href: '/#contact' },
 ];
 
 const CONTACT = {
@@ -120,9 +123,12 @@ export default function Footer() {
               </span>
             </p>
             <address className={styles.address}>
-              1097 Budapest, Vágóhíd utca 12–18.
-              <br />
-              8. épület, 1. emelet
+              {ADDRESS.lines.map((line, index) => (
+                <Fragment key={line}>
+                  {index > 0 && <br />}
+                  {line}
+                </Fragment>
+              ))}
             </address>
           </div>
 
